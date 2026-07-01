@@ -76,6 +76,11 @@ model Tenant {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Tarifas de entrada (configurables por el admin del tenant)
+  entryAdultPrice   Decimal @default(5000) @db.Decimal(10, 2)
+  entryChildPrice   Decimal @default(4000) @db.Decimal(10, 2)
+  entryFreeUnderAge Int     @default(4)
+
   users            User[]
   accessEntries    AccessEntry[]
   products         Product[]
@@ -120,19 +125,30 @@ model User {
 // ─── Access Control ───────────────────────────────────────────────────────────
 
 model AccessEntry {
-  id           String    @id @default(cuid())
-  tenantId     String
-  visitorName  String?
-  pax          Int       @default(1)
-  entryTime    DateTime  @default(now())
-  exitTime     DateTime?
-  notes        String?
-  createdAt    DateTime  @default(now())
+  id               String         @id @default(cuid())
+  tenantId         String
+  visitorName      String?
+  pax              Int            @default(1)
+  adults           Int            @default(0)
+  children         Int            @default(0)
+  freeMinors       Int            @default(0)
+  totalAmount      Decimal        @default(0) @db.Decimal(10, 2)
+  paymentMethod    PaymentMethod?
+  amountPaid       Decimal?       @db.Decimal(10, 2)
+  change           Decimal        @default(0) @db.Decimal(10, 2)
+  cashierSessionId String?
+  entryTime        DateTime       @default(now())
+  exitTime         DateTime?
+  notes            String?
+  createdAt        DateTime       @default(now())
 
-  tenant Tenant @relation(fields: [tenantId], references: [id])
+  tenant         Tenant          @relation(fields: [tenantId], references: [id])
+  cashierSession CashierSession? @relation(fields: [cashierSessionId], references: [id])
+  orders         Order[]
 
   @@index([tenantId])
   @@index([tenantId, entryTime])
+  @@index([cashierSessionId])
   @@map("access_entries")
 }
 
@@ -256,23 +272,26 @@ model PurchaseOrderItem {
 // ─── Store (POS) ──────────────────────────────────────────────────────────────
 
 model Order {
-  id           String      @id @default(cuid())
-  tenantId     String
-  customerName String?
-  status       OrderStatus @default(PENDIENTE)
-  totalAmount  Decimal     @default(0) @db.Decimal(10, 2)
-  notes        String?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  closedAt     DateTime?
+  id            String       @id @default(cuid())
+  tenantId      String
+  customerName  String?
+  accessEntryId String?
+  status        OrderStatus  @default(PENDIENTE)
+  totalAmount   Decimal      @default(0) @db.Decimal(10, 2)
+  notes         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  closedAt      DateTime?
 
-  tenant Tenant      @relation(fields: [tenantId], references: [id])
-  items  OrderItem[]
-  sale   Sale?
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
+  accessEntry AccessEntry? @relation(fields: [accessEntryId], references: [id])
+  items       OrderItem[]
+  sale        Sale?
 
   @@index([tenantId])
   @@index([tenantId, status])
   @@index([tenantId, createdAt])
+  @@index([accessEntryId])
   @@map("orders")
 }
 
@@ -332,10 +351,11 @@ model CashierSession {
   closedAt      DateTime?
   notes         String?
 
-  tenant       Tenant        @relation(fields: [tenantId], references: [id])
-  user         User          @relation(fields: [userId], references: [id])
-  sales        Sale[]
-  cashExpenses CashExpense[]
+  tenant        Tenant        @relation(fields: [tenantId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+  sales         Sale[]
+  cashExpenses  CashExpense[]
+  accessEntries AccessEntry[]
 
   @@index([tenantId])
   @@index([tenantId, status])

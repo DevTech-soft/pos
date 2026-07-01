@@ -3,9 +3,9 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api, getAxiosErrorMessage } from '@/lib/api-client'
 import { formatCurrency } from '@/lib/utils'
-import { ShoppingCart, Plus, Minus, Trash2, CreditCard } from 'lucide-react'
+import { ShoppingCart, Plus, Minus, Trash2, CreditCard, Receipt } from 'lucide-react'
 import { toast } from 'sonner'
-import type { Product, ProductVariant, CashierSession } from '@/lib/types'
+import type { Product, ProductVariant, CashierSession, AccessEntry } from '@/lib/types'
 
 interface CartItem { variant: ProductVariant; productName: string; quantity: number }
 
@@ -16,6 +16,7 @@ export default function TiendaPage() {
   const [payMethod, setPayMethod] = useState<string>('EFECTIVO')
   const [amountPaid, setAmountPaid] = useState('')
   const [orderId, setOrderId] = useState<string | null>(null)
+  const [tabId, setTabId] = useState('')
 
   const { data: products = [] } = useQuery({
     queryKey: ['store-products'],
@@ -25,6 +26,12 @@ export default function TiendaPage() {
   const { data: session } = useQuery({
     queryKey: ['cashier-active'],
     queryFn: () => api.get<CashierSession | null>('/cashier/active'),
+  })
+
+  const { data: openTabs = [] } = useQuery({
+    queryKey: ['access-open-tabs'],
+    queryFn: () => api.get<AccessEntry[]>('/access/open-tabs'),
+    refetchInterval: 15_000,
   })
 
   const total = cart.reduce((acc, i) => acc + Number(i.variant.price) * i.quantity, 0)
@@ -55,11 +62,18 @@ export default function TiendaPage() {
   const createOrder = useMutation({
     mutationFn: () => api.post<{ id: string }>('/store/orders', {
       items: cart.map(i => ({ productVariantId: i.variant.id, quantity: i.quantity })),
+      accessEntryId: tabId || undefined,
     }),
     onSuccess: (order) => {
-      setOrderId(order.id)
-      setPayModal(true)
       qc.invalidateQueries({ queryKey: ['store-products'] })
+      if (tabId) {
+        toast.success('Pedido cargado a la cuenta')
+        setCart([]); setTabId('')
+        qc.invalidateQueries({ queryKey: ['access-open-tabs'] })
+      } else {
+        setOrderId(order.id)
+        setPayModal(true)
+      }
     },
     onError: (e) => toast.error(getAxiosErrorMessage(e)),
   })
@@ -90,6 +104,7 @@ export default function TiendaPage() {
   }
 
   const categories = [...new Set(products.map(p => p.category))]
+  const selectedTab = openTabs.find(t => t.id === tabId)
 
   return (
     <div className="flex h-full">
@@ -173,19 +188,32 @@ export default function TiendaPage() {
         </div>
 
         <div className="p-5 border-t border-[#1C2535] space-y-4">
+          <div>
+            <label className="text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block mb-2 flex items-center gap-1.5">
+              <Receipt size={12} /> Cargar a cuenta (opcional)
+            </label>
+            <select value={tabId} onChange={e => setTabId(e.target.value)}
+              className="w-full bg-[#141B28] border border-[#1C2535] rounded-xl px-3 py-2.5 text-[13px] text-[#EDF2F7] outline-none focus:border-sky-500/50">
+              <option value="">— Cobrar ahora —</option>
+              {openTabs.map(t => (
+                <option key={t.id} value={t.id}>{t.visitorName ?? 'Anónimo'} ({t.pax} pers.)</option>
+              ))}
+            </select>
+          </div>
+
           <div className="flex justify-between">
             <span className="text-[14px] text-[#4A5568]">Total</span>
             <span className="text-[18px] font-bold text-sky-400">{formatCurrency(total)}</span>
           </div>
           <button
             onClick={() => createOrder.mutate()}
-            disabled={cart.length === 0 || !session || createOrder.isPending}
+            disabled={cart.length === 0 || (!tabId && !session) || createOrder.isPending}
             className="w-full py-3.5 rounded-xl font-semibold text-[14px] bg-gradient-to-r from-sky-500 to-blue-600 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:from-sky-400 hover:to-blue-500 transition-all flex items-center justify-center gap-2"
           >
             <CreditCard size={15} />
-            Cobrar
+            {tabId ? `Cargar a cuenta de ${selectedTab?.visitorName ?? 'Anónimo'}` : 'Cobrar'}
           </button>
-          {!session && <p className="text-[11px] text-amber-400 text-center">Abre una caja primero</p>}
+          {!tabId && !session && <p className="text-[11px] text-amber-400 text-center">Abre una caja primero</p>}
         </div>
       </div>
 

@@ -36,6 +36,13 @@ export class StoreService {
       throw new BadRequestException('Producto no encontrado en esta tienda');
     }
 
+    if (dto.accessEntryId) {
+      const entry = await this.prisma.accessEntry.findFirst({
+        where: { id: dto.accessEntryId, tenantId, paymentMethod: null, exitTime: null },
+      });
+      if (!entry) throw new BadRequestException('Cuenta abierta no encontrada');
+    }
+
     for (const item of dto.items) {
       const variant = variants.find(v => v.id === item.productVariantId)!;
       if (variant.stock < item.quantity) {
@@ -71,6 +78,7 @@ export class StoreService {
           tenantId,
           customerName: dto.customerName,
           notes: dto.notes,
+          accessEntryId: dto.accessEntryId,
           totalAmount,
           items: { create: items },
         },

@@ -32,9 +32,25 @@ export interface AccessEntry {
   tenantId: string
   visitorName?: string
   pax: number
+  adults: number
+  children: number
+  freeMinors: number
+  totalAmount: number
+  paymentMethod?: PaymentMethod
+  amountPaid?: number
+  change: number
+  cashierSessionId?: string
   entryTime: string
   exitTime?: string
   notes?: string
+  /** Solo presente en /access/open-tabs: pedidos de tienda PENDIENTE cargados a esta cuenta */
+  orders?: Order[]
+}
+
+export interface AccessPricing {
+  entryAdultPrice: number
+  entryChildPrice: number
+  entryFreeUnderAge: number
 }
 
 export interface ProductVariant {
@@ -118,6 +134,7 @@ export interface Order {
   id: string
   tenantId: string
   customerName?: string
+  accessEntryId?: string
   status: OrderStatus
   totalAmount: number
   notes?: string

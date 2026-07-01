@@ -11,6 +11,7 @@ export class OrderItemDto {
 export class CreateOrderDto {
   @IsOptional() @IsString() customerName?: string;
   @IsOptional() @IsString() notes?: string;
+  @IsOptional() @IsString() accessEntryId?: string;
   @IsArray() @ValidateNested({ each: true }) @Type(() => OrderItemDto) items: OrderItemDto[];
 }
 

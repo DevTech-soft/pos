@@ -1,14 +1,28 @@
 import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { AccessService } from './access.service';
-import { RegisterEntryDto, RegisterExitDto } from './dto/access.dto';
+import { RegisterEntryDto, RegisterExitDto, UpdateAccessPricingDto, SettleTabDto } from './dto/access.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { TenantGuard } from '../../common/guards/tenant.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('access')
-@UseGuards(JwtAuthGuard, TenantGuard)
+@UseGuards(JwtAuthGuard, TenantGuard, RolesGuard)
 export class AccessController {
   constructor(private accessService: AccessService) {}
+
+  @Get('pricing')
+  getPricing(@CurrentUser() user: any) {
+    return this.accessService.getPricing(user.tenantId);
+  }
+
+  @Patch('pricing')
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
+  updatePricing(@CurrentUser() user: any, @Body() dto: UpdateAccessPricingDto) {
+    return this.accessService.updatePricing(user.tenantId, dto);
+  }
 
   @Post('entry')
   registerEntry(@CurrentUser() user: any, @Body() dto: RegisterEntryDto) {
@@ -18,6 +32,16 @@ export class AccessController {
   @Patch(':id/exit')
   registerExit(@CurrentUser() user: any, @Param('id') id: string, @Body() dto: RegisterExitDto) {
     return this.accessService.registerExit(user.tenantId, id, dto);
+  }
+
+  @Get('open-tabs')
+  getOpenTabs(@CurrentUser() user: any) {
+    return this.accessService.getOpenTabs(user.tenantId);
+  }
+
+  @Post(':id/settle')
+  settleTab(@CurrentUser() user: any, @Param('id') id: string, @Body() dto: SettleTabDto) {
+    return this.accessService.settleTab(user.tenantId, id, dto);
   }
 
   @Get('today')
