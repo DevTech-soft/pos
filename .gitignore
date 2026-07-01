@@ -1,0 +1,79 @@
+# ─── Dependencias ────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ─── Variables de entorno (NUNCA subir) ──────────────────────
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+# Los archivos .example SÍ se suben — sirven de plantilla
+!.env.example
+!.env.local.example
+
+# ─── MCP / herramientas locales (pueden contener API keys) ───
+.mcp.json
+
+# ─── Backend NestJS ──────────────────────────────────────────
+backend/dist/
+backend/.env
+backend/.env.prod
+backend/.env.local
+backend/node_modules/
+
+# ─── Frontend Next.js ────────────────────────────────────────
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/node_modules/
+frontend/next-env.d.ts
+frontend/tsconfig.tsbuildinfo
+
+# ─── PWA (auto-generados por next-pwa en cada build) ─────────
+frontend/public/sw.js
+frontend/public/sw.js.map
+frontend/public/workbox-*.js
+frontend/public/workbox-*.js.map
+frontend/public/swe-worker-*.js
+frontend/public/swe-worker-*.js.map
+
+# ─── Logs ────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── Cobertura de tests ───────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ─── SO — macOS ───────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ─── SO — Windows ────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ─── Editores / IDEs ─────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─── Graphify (output generado automáticamente) ──────────────
+graphify-out/
+
+# ─── Misc ────────────────────────────────────────────────────
+*.tgz
+*.tar.gz

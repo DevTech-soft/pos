@@ -1,0 +1,261 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ══════════════════════════════════════════════════════════
+   SISTEMA DE DISEÑO — RestoPOS Premium
+   Paleta: Midnight Navy Dark
+   ══════════════════════════════════════════════════════════ */
+
+@theme {
+  /* Fuentes */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Superficies (capas de profundidad) */
+  --color-bg-root:      #080C12;
+  --color-bg-sidebar:   #0C1018;
+  --color-bg-card:      #101520;
+  --color-bg-elevated:  #141B28;
+  --color-bg-hover:     #1A2336;
+  --color-bg-active:    #1E2A3D;
+
+  /* Bordes */
+  --color-border:        #1C2535;
+  --color-border-strong: #263347;
+
+  /* Texto */
+  --color-text-primary:   #EDF2F7;
+  --color-text-secondary: #8B96A8;
+  --color-text-muted:     #4A5568;
+
+  /* Acento principal: Amber */
+  --color-amber-400: #FBBF24;
+  --color-amber-500: #F59E0B;
+  --color-amber-600: #D97706;
+
+  /* Status */
+  --color-libre:    #10B981;
+  --color-ocupada:  #F43F5E;
+  --color-proceso:  #F59E0B;
+
+  --radius: 0.875rem;
+}
+
+/* ── Variables CSS raíz ─────────────────────────────────── */
+:root {
+  --background:           220 40% 5%;
+  --foreground:           210 40% 94%;
+  --card:                 218 40% 8%;
+  --card-foreground:      210 40% 94%;
+  --popover:              218 40% 8%;
+  --popover-foreground:   210 40% 94%;
+  --primary:              38 92% 50%;
+  --primary-foreground:   0 0% 5%;
+  --secondary:            220 30% 12%;
+  --secondary-foreground: 210 40% 94%;
+  --muted:                220 30% 12%;
+  --muted-foreground:     215 20% 55%;
+  --accent:               220 30% 15%;
+  --accent-foreground:    210 40% 94%;
+  --destructive:          350 89% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border:               220 35% 15%;
+  --input:                220 35% 15%;
+  --ring:                 38 92% 50%;
+  --radius:               0.875rem;
+}
+
+/* ── Reset base ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  background-color: #080C12;
+  color: #EDF2F7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body { min-height: 100vh; overflow-x: hidden; }
+
+/* ── Scrollbar elegante ─────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1C2535; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #263347; }
+
+/* ── Tipografía ─────────────────────────────────────────── */
+.tabular-nums { font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+
+/* ── Animaciones ────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(245,158,11,0.3); }
+  50%       { box-shadow: 0 0 24px rgba(245,158,11,0.5); }
+}
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.7; }
+}
+
+.animate-fade-up    { animation: fadeUp   0.3s ease forwards; }
+.animate-fade-in    { animation: fadeIn   0.25s ease forwards; }
+.animate-slide-right{ animation: slideRight 0.25s ease forwards; }
+.animate-scale-in   { animation: scaleIn  0.2s ease forwards; }
+.animate-glow       { animation: glowPulse 2s ease-in-out infinite; }
+.animate-dot-pulse  { animation: dotPulse 1.5s ease-in-out infinite; }
+
+/* Stagger para grids */
+.stagger > * { opacity: 0; animation: fadeUp 0.28s ease forwards; }
+.stagger > *:nth-child(1)  { animation-delay: 0ms; }
+.stagger > *:nth-child(2)  { animation-delay: 60ms; }
+.stagger > *:nth-child(3)  { animation-delay: 120ms; }
+.stagger > *:nth-child(4)  { animation-delay: 180ms; }
+.stagger > *:nth-child(5)  { animation-delay: 240ms; }
+.stagger > *:nth-child(6)  { animation-delay: 300ms; }
+.stagger > *:nth-child(7)  { animation-delay: 360ms; }
+.stagger > *:nth-child(8)  { animation-delay: 420ms; }
+.stagger > *:nth-child(n+9){ animation-delay: 480ms; }
+
+/* También soportar stagger-children (compatibilidad) */
+.stagger-children > * { opacity: 0; animation: fadeUp 0.28s ease forwards; }
+.stagger-children > *:nth-child(1)  { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2)  { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3)  { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4)  { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5)  { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6)  { animation-delay: 300ms; }
+.stagger-children > *:nth-child(n+7){ animation-delay: 360ms; }
+
+/* ── Skeleton shimmer ───────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #141B28 25%,
+    #1C2535 50%,
+    #141B28 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Status de mesas (rediseño premium) ─────────────────── */
+.mesa-libre {
+  border-color: rgba(16, 185, 129, 0.6);
+  background: linear-gradient(135deg, rgba(16,185,129,0.06) 0%, #101520 60%);
+}
+.mesa-ocupada {
+  border-color: rgba(244, 63, 94, 0.6);
+  background: linear-gradient(135deg, rgba(244,63,94,0.06) 0%, #101520 60%);
+}
+.mesa-proceso {
+  border-color: rgba(245, 158, 11, 0.6);
+  background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, #101520 60%);
+}
+
+.mesa-libre:hover {
+  border-color: rgba(16,185,129,0.9);
+  box-shadow: 0 0 0 1px rgba(16,185,129,0.2), 0 12px 40px rgba(0,0,0,0.4);
+}
+.mesa-ocupada:hover {
+  border-color: rgba(244,63,94,0.9);
+  box-shadow: 0 0 0 1px rgba(244,63,94,0.2), 0 12px 40px rgba(0,0,0,0.4);
+}
+.mesa-proceso:hover {
+  border-color: rgba(245,158,11,0.9);
+  box-shadow: 0 0 0 1px rgba(245,158,11,0.25), 0 12px 40px rgba(0,0,0,0.4);
+}
+
+/* ── Card base ──────────────────────────────────────────── */
+.card {
+  background: #101520;
+  border: 1px solid #1C2535;
+  border-radius: 1rem;
+}
+.card-elevated {
+  background: #141B28;
+  border: 1px solid #1C2535;
+  border-radius: 1rem;
+}
+
+/* ── Input base ─────────────────────────────────────────── */
+.input-base {
+  width: 100%;
+  background: #141B28;
+  border: 1px solid #1C2535;
+  border-radius: 0.75rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.9375rem;
+  color: #EDF2F7;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input-base::placeholder { color: #4A5568; }
+.input-base:focus {
+  border-color: rgba(245,158,11,0.5);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
+}
+
+/* ── Gradientes de categorías de productos ──────────────── */
+.cat-grad-0 { background: linear-gradient(135deg, #2D1B69 0%, #1A0F3E 100%); }
+.cat-grad-1 { background: linear-gradient(135deg, #7C1D23 0%, #4A0F13 100%); }
+.cat-grad-2 { background: linear-gradient(135deg, #0F4C81 0%, #0A2E50 100%); }
+.cat-grad-3 { background: linear-gradient(135deg, #7C4A00 0%, #4A2C00 100%); }
+.cat-grad-4 { background: linear-gradient(135deg, #0F5132 0%, #0A3320 100%); }
+.cat-grad-5 { background: linear-gradient(135deg, #4A1F7C 0%, #2D1250 100%); }
+.cat-grad-6 { background: linear-gradient(135deg, #7C2D4A 0%, #4A1A2D 100%); }
+.cat-grad-7 { background: linear-gradient(135deg, #1F4A7C 0%, #122D50 100%); }
+
+/* ── Btn base ───────────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, #F59E0B, #F97316);
+  color: #000;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+  box-shadow: 0 4px 16px rgba(245,158,11,0.25);
+}
+.btn-primary:hover {
+  opacity: 0.92;
+  box-shadow: 0 6px 24px rgba(245,158,11,0.35);
+}
+.btn-primary:active { transform: scale(0.98); }
+
+/* ── Glow ring amber ────────────────────────────────────── */
+.ring-amber-glow {
+  box-shadow: 0 0 0 2px #F59E0B, 0 0 0 4px rgba(245,158,11,0.15);
+}
+
+/* ── Nav item active glow ───────────────────────────────── */
+.nav-active {
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(249,115,22,0.08));
+  border: 1px solid rgba(245,158,11,0.2);
+}

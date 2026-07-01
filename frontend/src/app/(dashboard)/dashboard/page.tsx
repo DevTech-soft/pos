@@ -1,0 +1,136 @@
+'use client'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '@/lib/api-client'
+import { useAuthStore } from '@/store/auth-store'
+import { formatCurrency, formatDate } from '@/lib/utils'
+import { Waves, Users, ShoppingCart, DollarSign, TrendingUp } from 'lucide-react'
+
+export default function DashboardPage() {
+  const { user } = useAuthStore()
+
+  const { data: occupancy } = useQuery({
+    queryKey: ['access-occupancy'],
+    queryFn: () => api.get<{ count: number; entries: any[] }>('/access/occupancy'),
+    refetchInterval: 30_000,
+    enabled: !!user,
+  })
+
+  const { data: session } = useQuery({
+    queryKey: ['cashier-active'],
+    queryFn: () => api.get<any>('/cashier/active'),
+    enabled: !!user,
+  })
+
+  const today = new Date().toISOString().split('T')[0]
+  const { data: accessStats } = useQuery({
+    queryKey: ['access-stats', today],
+    queryFn: () => api.get<any>(`/access/stats?date=${today}`),
+    enabled: !!user,
+  })
+
+  return (
+    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-[24px] font-bold text-[#EDF2F7]">Dashboard</h1>
+        <p className="text-[#4A5568] text-sm mt-1">
+          {user?.tenant?.name ?? 'Pool Manager'} — {formatDate(new Date().toISOString())}
+        </p>
+      </div>
+
+      {/* Metrics */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <MetricCard
+          icon={Waves}
+          label="Aforo actual"
+          value={occupancy?.count ?? 0}
+          suffix="personas"
+          color="sky"
+        />
+        <MetricCard
+          icon={Users}
+          label="Entradas hoy"
+          value={accessStats?.totalPax ?? 0}
+          suffix="personas"
+          color="cyan"
+        />
+        <MetricCard
+          icon={ShoppingCart}
+          label="Ventas del día"
+          value={session ? formatCurrency(Number(session.totalSales)) : '—'}
+          color="emerald"
+          isCurrency
+        />
+        <MetricCard
+          icon={DollarSign}
+          label="Estado caja"
+          value={session ? 'Abierta' : 'Cerrada'}
+          color={session ? 'emerald' : 'rose'}
+        />
+      </div>
+
+      {/* Quick info */}
+      {!session && (
+        <div className="bg-[#101520] border border-amber-500/20 rounded-2xl p-5">
+          <div className="flex items-center gap-3">
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            <p className="text-amber-400 text-sm font-medium">No hay caja abierta. Ve a la sección Caja para abrir una sesión.</p>
+          </div>
+        </div>
+      )}
+
+      {occupancy && occupancy.count > 0 && (
+        <div className="bg-[#101520] border border-[#1C2535] rounded-2xl p-5">
+          <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4 flex items-center gap-2">
+            <TrendingUp size={16} className="text-sky-400" />
+            Visitantes actualmente en la piscina
+          </h2>
+          <div className="space-y-2">
+            {occupancy.entries.slice(0, 10).map((e: any) => (
+              <div key={e.id} className="flex items-center justify-between p-3 bg-[#141B28] rounded-xl">
+                <div>
+                  <p className="text-[14px] font-medium text-[#EDF2F7]">{e.visitorName ?? 'Visitante anónimo'}</p>
+                  {e.pax > 1 && <p className="text-[12px] text-[#4A5568]">{e.pax} personas</p>}
+                </div>
+                <p className="text-[12px] text-[#4A5568]">
+                  Entrada: {new Date(e.entryTime).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function MetricCard({ icon: Icon, label, value, suffix, color, isCurrency }: {
+  icon: React.ElementType
+  label: string
+  value: string | number
+  suffix?: string
+  color: string
+  isCurrency?: boolean
+}) {
+  const colorMap: Record<string, { bg: string; text: string; border: string }> = {
+    sky:     { bg: 'bg-sky-500/10',     text: 'text-sky-400',     border: 'border-sky-500/20' },
+    cyan:    { bg: 'bg-cyan-500/10',    text: 'text-cyan-400',    border: 'border-cyan-500/20' },
+    emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
+    rose:    { bg: 'bg-rose-500/10',    text: 'text-rose-400',    border: 'border-rose-500/20' },
+    violet:  { bg: 'bg-violet-500/10',  text: 'text-violet-400',  border: 'border-violet-500/20' },
+  }
+  const c = colorMap[color] ?? colorMap.sky
+
+  return (
+    <div className={`bg-[#101520] border ${c.border} rounded-2xl p-5`}>
+      <div className="flex items-start justify-between mb-3">
+        <p className="text-[12px] text-[#4A5568] font-medium">{label}</p>
+        <div className={`w-8 h-8 rounded-lg ${c.bg} flex items-center justify-center`}>
+          <Icon size={15} className={c.text} />
+        </div>
+      </div>
+      <p className={`text-[26px] font-bold ${c.text} leading-none`}>{value}</p>
+      {suffix && <p className="text-[12px] text-[#4A5568] mt-1">{suffix}</p>}
+    </div>
+  )
+}
