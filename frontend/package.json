@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 3001",
-    "dev:no-turbo": "next dev --port 3001",
+    "dev": "next dev --turbopack --port 3000",
+    "dev:no-turbo": "next dev --port 3000",
     "build": "next build",
-    "start": "next start --port 3001",
-    "preview": "next start --port 3002",
+    "start": "next start --port 3000",
+    "preview": "next start --port 3001",
     "lint": "next lint",
     "test": "jest --watchAll=false",
     "test:watch": "jest --watchAll"

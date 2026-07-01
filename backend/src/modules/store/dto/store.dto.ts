@@ -1,26 +1,9 @@
-import { IsString, IsNumber, IsOptional, IsBoolean, IsEnum, IsArray, ValidateNested, Min, IsInt } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsEnum, IsArray, ValidateNested, Min, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaymentMethod } from '@prisma/client';
 
-export class CreateProductDto {
-  @IsString() name: string;
-  @IsOptional() @IsString() description?: string;
-  @IsNumber() @Min(0) @Type(() => Number) price: number;
-  @IsString() category: string;
-  @IsOptional() @IsString() imageUrl?: string;
-}
-
-export class UpdateProductDto {
-  @IsOptional() @IsString() name?: string;
-  @IsOptional() @IsString() description?: string;
-  @IsOptional() @IsNumber() @Min(0) @Type(() => Number) price?: number;
-  @IsOptional() @IsString() category?: string;
-  @IsOptional() @IsBoolean() isAvailable?: boolean;
-  @IsOptional() @IsBoolean() isActive?: boolean;
-}
-
 export class OrderItemDto {
-  @IsString() productId: string;
+  @IsString() productVariantId: string;
   @IsInt() @Min(1) @Type(() => Number) quantity: number;
   @IsOptional() @IsString() notes?: string;
 }

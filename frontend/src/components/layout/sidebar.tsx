@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutGrid, ShoppingCart, Landmark, ClipboardList,
   Receipt, LogOut, ChevronLeft, ChevronRight,
-  Waves, Users, DollarSign, Building2, UserCheck,
+  Waves, Users, DollarSign, Building2, UserCheck, Package,
 } from 'lucide-react'
 import { cn, rolLabel } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth-store'
@@ -23,12 +23,13 @@ const NAV_ITEMS: {
   { href: '/dashboard',     label: 'Dashboard',   icon: LayoutGrid,  roles: ['SUPERADMIN', 'ADMIN', 'CAJERO'], shortcut: 'Alt+1' },
   { href: '/acceso',        label: 'Control Acceso', icon: UserCheck, roles: ['ADMIN', 'CAJERO'],              shortcut: 'Alt+2', activeColor: 'cyan' },
   { href: '/tienda',        label: 'Tienda',       icon: ShoppingCart, roles: ['ADMIN', 'CAJERO'],             shortcut: 'Alt+3' },
-  { href: '/caja',          label: 'Caja',         icon: Landmark,    roles: ['ADMIN', 'CAJERO'],              shortcut: 'Alt+4' },
-  { href: '/ventas',        label: 'Ventas',       icon: ClipboardList, roles: ['ADMIN', 'CAJERO'],            shortcut: 'Alt+5' },
-  { href: '/empleados',     label: 'Empleados',    icon: Users,       roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+6', activeColor: 'violet' },
-  { href: '/nomina',        label: 'Nómina',       icon: DollarSign,  roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+7', activeColor: 'violet' },
-  { href: '/gastos',        label: 'Gastos',       icon: Receipt,     roles: ['ADMIN'],                        shortcut: 'Alt+8', activeColor: 'rose' },
-  { href: '/tenants',       label: 'Piscinas',     icon: Building2,   roles: ['SUPERADMIN'],                   shortcut: 'Alt+9', activeColor: 'amber' },
+  { href: '/inventario',    label: 'Inventario',   icon: Package,     roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+4', activeColor: 'emerald' },
+  { href: '/caja',          label: 'Caja',         icon: Landmark,    roles: ['ADMIN', 'CAJERO'],              shortcut: 'Alt+5' },
+  { href: '/ventas',        label: 'Ventas',       icon: ClipboardList, roles: ['ADMIN', 'CAJERO'],            shortcut: 'Alt+6' },
+  { href: '/empleados',     label: 'Empleados',    icon: Users,       roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+7', activeColor: 'violet' },
+  { href: '/nomina',        label: 'Nómina',       icon: DollarSign,  roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+8', activeColor: 'violet' },
+  { href: '/gastos',        label: 'Gastos',       icon: Receipt,     roles: ['ADMIN'],                        shortcut: 'Alt+9', activeColor: 'rose' },
+  { href: '/tenants',       label: 'Piscinas',     icon: Building2,   roles: ['SUPERADMIN'],                   shortcut: 'Alt+0', activeColor: 'amber' },
 ]
 
 export function Sidebar() {
@@ -68,6 +69,7 @@ export function Sidebar() {
     violet: 'text-violet-400 bg-violet-500/8 border-violet-500/20',
     rose:   'text-rose-400 bg-rose-500/8 border-rose-500/20',
     amber:  'text-amber-400 bg-amber-500/8 border-amber-500/20',
+    emerald:'text-emerald-400 bg-emerald-500/8 border-emerald-500/20',
     default:'text-sky-400 bg-sky-500/8 border-sky-500/20',
   }
   const barMap: Record<string, string> = {
@@ -75,6 +77,7 @@ export function Sidebar() {
     violet: 'bg-gradient-to-b from-violet-400 to-purple-500 shadow-violet-500/50',
     rose:   'bg-gradient-to-b from-rose-400 to-rose-600 shadow-rose-500/50',
     amber:  'bg-gradient-to-b from-amber-400 to-orange-500 shadow-amber-500/50',
+    emerald:'bg-gradient-to-b from-emerald-400 to-emerald-600 shadow-emerald-500/50',
     default:'bg-gradient-to-b from-sky-400 to-blue-500 shadow-sky-500/50',
   }
 

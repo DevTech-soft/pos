@@ -4,6 +4,7 @@ export type CashierStatus = 'ABIERTA' | 'CERRADA'
 export type OrderStatus = 'PENDIENTE' | 'PAGADO' | 'CANCELADO'
 export type PayrollPeriodType = 'QUINCENAL' | 'MENSUAL'
 export type PayrollPeriodStatus = 'ABIERTO' | 'CERRADO'
+export type PurchaseOrderStatus = 'PENDIENTE' | 'RECIBIDA' | 'CANCELADA'
 
 export interface Tenant {
   id: string
@@ -36,26 +37,81 @@ export interface AccessEntry {
   notes?: string
 }
 
+export interface ProductVariant {
+  id: string
+  tenantId: string
+  productId: string
+  name: string
+  sku?: string
+  barcode?: string
+  purchaseUnit: string
+  saleUnit: string
+  unitsPerPurchase: number
+  price: number
+  cost: number
+  stock: number
+  isAvailable: boolean
+  isActive: boolean
+  product?: Product
+}
+
 export interface Product {
   id: string
   tenantId: string
   name: string
+  brand?: string
   description?: string
-  price: number
   category: string
   imageUrl?: string
-  isAvailable: boolean
   isActive: boolean
+  variants: ProductVariant[]
+}
+
+export interface Supplier {
+  id: string
+  tenantId: string
+  name: string
+  contactName?: string
+  phone?: string
+  email?: string
+  address?: string
+  notes?: string
+  isActive: boolean
+}
+
+export interface PurchaseOrderItem {
+  id: string
+  purchaseOrderId: string
+  productVariantId: string
+  quantity: number
+  unitCost: number
+  subtotal: number
+  notes?: string
+  productVariant: ProductVariant
+}
+
+export interface PurchaseOrder {
+  id: string
+  tenantId: string
+  supplierId: string
+  status: PurchaseOrderStatus
+  orderDate: string
+  receivedAt?: string
+  totalAmount: number
+  notes?: string
+  createdBy: string
+  supplier: Supplier
+  items: PurchaseOrderItem[]
 }
 
 export interface OrderItem {
   id: string
-  productId: string
+  productVariantId: string
   quantity: number
   unitPrice: number
   subtotal: number
   notes?: string
-  product: Product
+  productVariant: ProductVariant
 }
 
 export interface Order {

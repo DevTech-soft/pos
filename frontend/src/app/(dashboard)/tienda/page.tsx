@@ -5,9 +5,9 @@ import { api, getAxiosErrorMessage } from '@/lib/api-client'
 import { formatCurrency } from '@/lib/utils'
 import { ShoppingCart, Plus, Minus, Trash2, CreditCard } from 'lucide-react'
 import { toast } from 'sonner'
-import type { Product, CashierSession } from '@/lib/types'
+import type { Product, ProductVariant, CashierSession } from '@/lib/types'
 
-interface CartItem { product: Product; quantity: number }
+interface CartItem { variant: ProductVariant; productName: string; quantity: number }
 
 export default function TiendaPage() {
   const qc = useQueryClient()
@@ -27,33 +27,46 @@ export default function TiendaPage() {
     queryFn: () => api.get<CashierSession | null>('/cashier/active'),
   })
 
-  const total = cart.reduce((acc, i) => acc + i.product.price * i.quantity, 0)
+  const total = cart.reduce((acc, i) => acc + Number(i.variant.price) * i.quantity, 0)
 
-  const addToCart = (product: Product) => {
+  const cartQuantity = (variantId: string) => cart.find(i => i.variant.id === variantId)?.quantity ?? 0
+
+  const addToCart = (product: Product, variant: ProductVariant) => {
+    if (cartQuantity(variant.id) >= variant.stock) {
+      toast.error(`Sin stock disponible de ${product.name} (${variant.name})`)
+      return
+    }
     setCart(prev => {
-      const found = prev.find(i => i.product.id === product.id)
-      if (found) return prev.map(i => i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i)
-      return [...prev, { product, quantity: 1 }]
+      const found = prev.find(i => i.variant.id === variant.id)
+      if (found) return prev.map(i => i.variant.id === variant.id ? { ...i, quantity: i.quantity + 1 } : i)
+      return [...prev, { variant, productName: product.name, quantity: 1 }]
     })
   }
 
-  const removeFromCart = (productId: string) => {
+  const removeFromCart = (variantId: string) => {
     setCart(prev => {
-      const found = prev.find(i => i.product.id === productId)
+      const found = prev.find(i => i.variant.id === variantId)
       if (!found) return prev
-      if (found.quantity === 1) return prev.filter(i => i.product.id !== productId)
-      return prev.map(i => i.product.id === productId ? { ...i, quantity: i.quantity - 1 } : i)
+      if (found.quantity === 1) return prev.filter(i => i.variant.id !== variantId)
+      return prev.map(i => i.variant.id === variantId ? { ...i, quantity: i.quantity - 1 } : i)
     })
   }
 
   const createOrder = useMutation({
     mutationFn: () => api.post<{ id: string }>('/store/orders', {
-      items: cart.map(i => ({ productId: i.product.id, quantity: i.quantity })),
+      items: cart.map(i => ({ productVariantId: i.variant.id, quantity: i.quantity })),
     }),
     onSuccess: (order) => {
       setOrderId(order.id)
       setPayModal(true)
+      qc.invalidateQueries({ queryKey: ['store-products'] })
     },
+    onError: (e) => toast.error(getAxiosErrorMessage(e)),
+  })
+
+  const cancelOrder = useMutation({
+    mutationFn: () => api.post(`/store/orders/${orderId}/cancel`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['store-products'] }),
     onError: (e) => toast.error(getAxiosErrorMessage(e)),
   })
 
@@ -71,6 +84,11 @@ export default function TiendaPage() {
     onError: (e) => toast.error(getAxiosErrorMessage(e)),
   })
 
+  const handleCancelPay = () => {
+    if (orderId) cancelOrder.mutate()
+    setPayModal(false); setOrderId(null); setAmountPaid('')
+  }
+
   const categories = [...new Set(products.map(p => p.category))]
 
   return (
@@ -82,17 +100,40 @@ export default function TiendaPage() {
           <div key={cat}>
             <h2 className="text-[13px] font-semibold text-[#4A5568] uppercase tracking-[0.15em] mb-3">{cat}</h2>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-              {products.filter(p => p.category === cat && p.isAvailable).map(p => (
-                <button key={p.id} onClick={() => addToCart(p)}
-                  className="bg-[#101520] border border-[#1C2535] rounded-2xl p-4 text-left hover:border-sky-500/30 transition-colors group">
-                  <p className="text-[14px] font-medium text-[#EDF2F7] group-hover:text-sky-400 transition-colors">{p.name}</p>
-                  {p.description && <p className="text-[12px] text-[#4A5568] mt-1 line-clamp-1">{p.description}</p>}
-                  <p className="text-[16px] font-bold text-sky-400 mt-2">{formatCurrency(Number(p.price))}</p>
-                </button>
+              {products.filter(p => p.category === cat).map(p => (
+                <div key={p.id} className="bg-[#101520] border border-[#1C2535] rounded-2xl p-4">
+                  <p className="text-[14px] font-medium text-[#EDF2F7]">{p.name}</p>
+                  {p.brand && <p className="text-[11px] text-[#4A5568] mt-0.5">{p.brand}</p>}
+                  <div className="mt-3 space-y-1.5">
+                    {p.variants.map(v => {
+                      const inCartQty = cartQuantity(v.id)
+                      const outOfStock = v.stock - inCartQty <= 0
+                      return (
+                        <button
+                          key={v.id}
+                          onClick={() => addToCart(p, v)}
+                          disabled={outOfStock}
+                          className="w-full flex items-center justify-between rounded-xl px-3 py-2 bg-[#141B28] border border-[#1C2535] hover:border-sky-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors group"
+                        >
+                          <span className="text-[12px] text-[#8B96A8] group-hover:text-sky-400 transition-colors truncate">{v.name}</span>
+                          <span className="flex items-center gap-2 flex-shrink-0">
+                            <span className={`text-[10px] ${outOfStock ? 'text-rose-400' : 'text-[#4A5568]'}`}>
+                              {outOfStock ? 'Sin stock' : `${v.stock - inCartQty} disp.`}
+                            </span>
+                            <span className="text-[13px] font-bold text-sky-400">{formatCurrency(Number(v.price))}</span>
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         ))}
+        {products.length === 0 && (
+          <p className="text-[#4A5568] text-center py-8">No hay productos disponibles para la venta</p>
+        )}
       </div>
 
       {/* Cart */}
@@ -108,17 +149,21 @@ export default function TiendaPage() {
           {cart.length === 0
             ? <p className="text-[#4A5568] text-sm text-center py-8">Sin productos</p>
             : cart.map(item => (
-              <div key={item.product.id} className="flex items-center gap-3 p-3 bg-[#141B28] rounded-xl">
+              <div key={item.variant.id} className="flex items-center gap-3 p-3 bg-[#141B28] rounded-xl">
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-medium text-[#EDF2F7] truncate">{item.product.name}</p>
-                  <p className="text-[12px] text-sky-400">{formatCurrency(Number(item.product.price))}</p>
+                  <p className="text-[13px] font-medium text-[#EDF2F7] truncate">{item.productName}</p>
+                  <p className="text-[11px] text-[#4A5568] truncate">{item.variant.name}</p>
+                  <p className="text-[12px] text-sky-400">{formatCurrency(Number(item.variant.price))}</p>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <button onClick={() => removeFromCart(item.product.id)} className="w-6 h-6 rounded-lg bg-[#1C2535] text-[#8B96A8] hover:text-rose-400 flex items-center justify-center">
+                  <button onClick={() => removeFromCart(item.variant.id)} className="w-6 h-6 rounded-lg bg-[#1C2535] text-[#8B96A8] hover:text-rose-400 flex items-center justify-center">
                     {item.quantity === 1 ? <Trash2 size={11} /> : <Minus size={11} />}
                   </button>
                   <span className="text-[13px] font-medium text-[#EDF2F7] w-5 text-center">{item.quantity}</span>
-                  <button onClick={() => addToCart(item.product)} className="w-6 h-6 rounded-lg bg-[#1C2535] text-[#8B96A8] hover:text-sky-400 flex items-center justify-center">
+                  <button onClick={() => {
+                    const product = products.find(p => p.id === item.variant.productId)
+                    if (product) addToCart(product, item.variant)
+                  }} className="w-6 h-6 rounded-lg bg-[#1C2535] text-[#8B96A8] hover:text-sky-400 flex items-center justify-center">
                     <Plus size={11} />
                   </button>
                 </div>
@@ -170,7 +215,7 @@ export default function TiendaPage() {
               )}
             </div>
             <div className="flex gap-3">
-              <button onClick={() => { setPayModal(false); setOrderId(null) }}
+              <button onClick={handleCancelPay}
                 className="flex-1 py-3 rounded-xl border border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8] text-[14px]">
                 Cancelar
               </button>

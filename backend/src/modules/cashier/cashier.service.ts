@@ -64,7 +64,7 @@ export class CashierService {
     const session = await this.prisma.cashierSession.findFirst({
       where: { id: sessionId, tenantId },
       include: {
-        sales: { include: { order: { include: { items: { include: { product: true } } } } } },
+        sales: { include: { order: { include: { items: { include: { productVariant: { include: { product: true } } } } } } } },
         cashExpenses: true,
         user: { select: { name: true } },
       },

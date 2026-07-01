@@ -41,7 +41,9 @@ export default function VentasPage() {
             <div className="space-y-1">
               {sale.order.items.map(item => (
                 <div key={item.id} className="flex justify-between text-[13px]">
-                  <span className="text-[#4A5568]">{item.product.name} ×{item.quantity}</span>
+                  <span className="text-[#4A5568]">
+                    {item.productVariant.product?.name} ({item.productVariant.name}) ×{item.quantity}
+                  </span>
                   <span className="text-[#8B96A8]">{formatCurrency(Number(item.subtotal))}</span>
                 </div>
               ))}
