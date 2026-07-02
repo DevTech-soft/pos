@@ -44,6 +44,11 @@ export class AccessController {
     return this.accessService.settleTab(user.tenantId, id, dto);
   }
 
+  @Get('sales')
+  getPaidEntries(@CurrentUser() user: any) {
+    return this.accessService.getPaidEntries(user.tenantId);
+  }
+
   @Get('today')
   findToday(@CurrentUser() user: any) {
     return this.accessService.findToday(user.tenantId);

@@ -9,6 +9,7 @@ import { AccessModule } from './modules/access/access.module';
 import { CashierModule } from './modules/cashier/cashier.module';
 import { StoreModule } from './modules/store/store.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
+import { RentalsModule } from './modules/rentals/rentals.module';
 import { EmployeesModule } from './modules/employees/employees.module';
 import { PayrollModule } from './modules/payroll/payroll.module';
 import { GeneralExpensesModule } from './modules/general-expenses/general-expenses.module';
@@ -25,6 +26,7 @@ import { GeneralExpensesModule } from './modules/general-expenses/general-expens
     CashierModule,
     StoreModule,
     InventoryModule,
+    RentalsModule,
     EmployeesModule,
     PayrollModule,
     GeneralExpensesModule,

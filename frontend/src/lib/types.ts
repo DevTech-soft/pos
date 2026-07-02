@@ -5,6 +5,7 @@ export type OrderStatus = 'PENDIENTE' | 'PAGADO' | 'CANCELADO'
 export type PayrollPeriodType = 'QUINCENAL' | 'MENSUAL'
 export type PayrollPeriodStatus = 'ABIERTO' | 'CERRADO'
 export type PurchaseOrderStatus = 'PENDIENTE' | 'RECIBIDA' | 'CANCELADA'
+export type RentalStatus = 'RESERVADO' | 'COMPLETADO' | 'CANCELADO'
 
 export interface Tenant {
   id: string
@@ -43,14 +44,53 @@ export interface AccessEntry {
   entryTime: string
   exitTime?: string
   notes?: string
-  /** Solo presente en /access/open-tabs: pedidos de tienda PENDIENTE cargados a esta cuenta */
+  /** Presente en /access/open-tabs (pedidos PENDIENTE) y /access/sales (pedidos PAGADO) */
   orders?: Order[]
+  /** Solo presente en /access/sales: momento en que se cobró (exitTime si fue por cuenta, si no entryTime) */
+  paidAt?: string
 }
 
 export interface AccessPricing {
   entryAdultPrice: number
   entryChildPrice: number
   entryFreeUnderAge: number
+}
+
+export interface RentalSpace {
+  id: string
+  tenantId: string
+  name: string
+  price: number
+  isActive: boolean
+}
+
+export interface RentalItem {
+  id: string
+  rentalId: string
+  spaceId: string
+  price: number
+  space: RentalSpace
+}
+
+export interface Rental {
+  id: string
+  tenantId: string
+  customerName: string
+  phone?: string
+  startAt: string
+  endAt: string
+  status: RentalStatus
+  totalAmount: number
+  paymentMethod?: PaymentMethod
+  amountPaid?: number
+  change: number
+  cashierSessionId?: string
+  paidAt?: string
+  notes?: string
+  createdAt: string
+  items: RentalItem[]
+  /** Presente en /rentals, /rentals/open-tabs (pedidos PENDIENTE) y /rentals/sales (pedidos PAGADO) */
+  orders?: Order[]
 }
 
 export interface ProductVariant {
@@ -135,6 +175,7 @@ export interface Order {
   tenantId: string
   customerName?: string
   accessEntryId?: string
+  rentalId?: string
   status: OrderStatus
   totalAmount: number
   notes?: string

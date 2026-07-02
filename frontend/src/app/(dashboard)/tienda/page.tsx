@@ -5,7 +5,7 @@ import { api, getAxiosErrorMessage } from '@/lib/api-client'
 import { formatCurrency } from '@/lib/utils'
 import { ShoppingCart, Plus, Minus, Trash2, CreditCard, Receipt } from 'lucide-react'
 import { toast } from 'sonner'
-import type { Product, ProductVariant, CashierSession, AccessEntry } from '@/lib/types'
+import type { Product, ProductVariant, CashierSession, AccessEntry, Rental } from '@/lib/types'
 
 interface CartItem { variant: ProductVariant; productName: string; quantity: number }
 
@@ -16,7 +16,8 @@ export default function TiendaPage() {
   const [payMethod, setPayMethod] = useState<string>('EFECTIVO')
   const [amountPaid, setAmountPaid] = useState('')
   const [orderId, setOrderId] = useState<string | null>(null)
-  const [tabId, setTabId] = useState('')
+  // '' = cobrar ahora, 'entry:<id>' = cargar a cuenta de entrada, 'rental:<id>' = cargar a cuenta de alquiler
+  const [chargeTarget, setChargeTarget] = useState('')
 
   const { data: products = [] } = useQuery({
     queryKey: ['store-products'],
@@ -31,6 +32,12 @@ export default function TiendaPage() {
   const { data: openTabs = [] } = useQuery({
     queryKey: ['access-open-tabs'],
     queryFn: () => api.get<AccessEntry[]>('/access/open-tabs'),
+    refetchInterval: 15_000,
+  })
+
+  const { data: openRentalTabs = [] } = useQuery({
+    queryKey: ['rental-open-tabs'],
+    queryFn: () => api.get<Rental[]>('/rentals/open-tabs'),
     refetchInterval: 15_000,
   })
 
@@ -59,17 +66,21 @@ export default function TiendaPage() {
     })
   }
 
+  const [targetKind, targetId] = chargeTarget ? chargeTarget.split(':') as ['entry' | 'rental', string] : [undefined, undefined]
+
   const createOrder = useMutation({
     mutationFn: () => api.post<{ id: string }>('/store/orders', {
       items: cart.map(i => ({ productVariantId: i.variant.id, quantity: i.quantity })),
-      accessEntryId: tabId || undefined,
+      accessEntryId: targetKind === 'entry' ? targetId : undefined,
+      rentalId: targetKind === 'rental' ? targetId : undefined,
     }),
     onSuccess: (order) => {
       qc.invalidateQueries({ queryKey: ['store-products'] })
-      if (tabId) {
+      if (chargeTarget) {
         toast.success('Pedido cargado a la cuenta')
-        setCart([]); setTabId('')
+        setCart([]); setChargeTarget('')
         qc.invalidateQueries({ queryKey: ['access-open-tabs'] })
+        qc.invalidateQueries({ queryKey: ['rental-open-tabs'] })
       } else {
         setOrderId(order.id)
         setPayModal(true)
@@ -104,7 +115,9 @@ export default function TiendaPage() {
   }
 
   const categories = [...new Set(products.map(p => p.category))]
-  const selectedTab = openTabs.find(t => t.id === tabId)
+  const selectedEntry = targetKind === 'entry' ? openTabs.find(t => t.id === targetId) : undefined
+  const selectedRental = targetKind === 'rental' ? openRentalTabs.find(t => t.id === targetId) : undefined
+  const selectedLabel = selectedEntry?.visitorName ?? selectedRental?.customerName ?? 'Anónimo'
 
   return (
     <div className="flex h-full">
@@ -192,12 +205,23 @@ export default function TiendaPage() {
             <label className="text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block mb-2 flex items-center gap-1.5">
               <Receipt size={12} /> Cargar a cuenta (opcional)
             </label>
-            <select value={tabId} onChange={e => setTabId(e.target.value)}
+            <select value={chargeTarget} onChange={e => setChargeTarget(e.target.value)}
               className="w-full bg-[#141B28] border border-[#1C2535] rounded-xl px-3 py-2.5 text-[13px] text-[#EDF2F7] outline-none focus:border-sky-500/50">
               <option value="">— Cobrar ahora —</option>
-              {openTabs.map(t => (
-                <option key={t.id} value={t.id}>{t.visitorName ?? 'Anónimo'} ({t.pax} pers.)</option>
-              ))}
+              {openTabs.length > 0 && (
+                <optgroup label="Entradas">
+                  {openTabs.map(t => (
+                    <option key={t.id} value={`entry:${t.id}`}>{t.visitorName ?? 'Anónimo'} ({t.pax} pers.)</option>
+                  ))}
+                </optgroup>
+              )}
+              {openRentalTabs.length > 0 && (
+                <optgroup label="Alquileres">
+                  {openRentalTabs.map(t => (
+                    <option key={t.id} value={`rental:${t.id}`}>{t.customerName}</option>
+                  ))}
+                </optgroup>
+              )}
             </select>
           </div>
 
@@ -207,13 +231,13 @@ export default function TiendaPage() {
           </div>
           <button
             onClick={() => createOrder.mutate()}
-            disabled={cart.length === 0 || (!tabId && !session) || createOrder.isPending}
+            disabled={cart.length === 0 || (!chargeTarget && !session) || createOrder.isPending}
             className="w-full py-3.5 rounded-xl font-semibold text-[14px] bg-gradient-to-r from-sky-500 to-blue-600 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:from-sky-400 hover:to-blue-500 transition-all flex items-center justify-center gap-2"
           >
             <CreditCard size={15} />
-            {tabId ? `Cargar a cuenta de ${selectedTab?.visitorName ?? 'Anónimo'}` : 'Cobrar'}
+            {chargeTarget ? `Cargar a cuenta de ${selectedLabel}` : 'Cobrar'}
           </button>
-          {!tabId && !session && <p className="text-[11px] text-amber-400 text-center">Abre una caja primero</p>}
+          {!chargeTarget && !session && <p className="text-[11px] text-amber-400 text-center">Abre una caja primero</p>}
         </div>
       </div>
 

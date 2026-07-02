@@ -163,6 +163,24 @@ export class AccessService {
     });
   }
 
+  // ── Ventas (entradas ya cobradas, con lo que se les haya cargado) ────────
+
+  async getPaidEntries(tenantId: string) {
+    const entries = await this.prisma.accessEntry.findMany({
+      where: { tenantId, paymentMethod: { not: null } },
+      include: {
+        orders: {
+          where: { status: 'PAGADO' },
+          include: { items: { include: { productVariant: { include: { product: true } } } } },
+        },
+      },
+    });
+    return entries
+      .map(e => ({ ...e, paidAt: e.exitTime ?? e.entryTime }))
+      .sort((a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime())
+      .slice(0, 100);
+  }
+
   findToday(tenantId: string) {
     const start = new Date();
     start.setHours(0, 0, 0, 0);

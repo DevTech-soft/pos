@@ -87,3 +87,90 @@ Reglas adoptadas:
 - Tienda (`/tienda`): selector "Cargar a cuenta" en el carrito — si se elige
   una cuenta abierta, el botón pasa de "Cobrar" a "Cargar a cuenta de …" y no
   pide pago.
+
+## 2026-07-01 — Cuaderno de ventas: entradas y consumo de tienda juntos
+
+Problema: `/ventas` solo mostraba `Sale` (pedidos de tienda pagados) — las
+entradas cobradas (de inmediato o al liquidar una cuenta) no aparecían ahí,
+aunque sí sumaban en caja.
+
+- Nuevo `GET /access/sales`: entradas ya pagadas (`paymentMethod` no nulo),
+  con sus pedidos `PAGADO` incluidos y un `paidAt` calculado
+  (`exitTime` si se pagó al liquidar cuenta, si no `entryTime` si se pagó de
+  inmediato).
+- El frontend combina `/store/sales` + `/access/sales` en una sola lista
+  ordenada por fecha. Los pedidos que ya se cargaron a una cuenta se excluyen
+  de `/store/sales` en esa vista (se muestran una sola vez, dentro de la
+  tarjeta de la entrada) para no duplicarlos.
+- Cada tarjeta de entrada en el cuaderno muestra: visitante, desglose de
+  personas, valor de la entrada, método de pago y — si tuvo cuenta — los
+  productos de tienda que se cobraron junto con ella.
+
+## 2026-07-01 — Alquiler de espacios (piscina, salones, etc.)
+
+Problema: además de la entrada por persona, la piscina alquila espacios
+completos por horario (ej. "piscina privada" de 2pm a 6pm, o un salón para
+un evento). Una reserva puede combinar varios espacios a la vez, y — igual
+que con las entradas — puede pagarse de inmediato o quedar como cuenta
+abierta mientras el cliente consume en la tienda.
+
+Reglas adoptadas (paralelas a las de Control de Acceso):
+
+1. Catálogo de espacios (`RentalSpace`): nombre + precio, configurable por
+   Admin desde el botón "Espacios" en `/alquiler`. Un espacio inactivo no
+   se puede reservar pero conserva su historial.
+2. Una reserva (`Rental`) tiene cliente, teléfono opcional, rango de fecha/hora
+   (`startAt`/`endAt`) y uno o más espacios (`RentalItem`, con el precio
+   vigente al momento de reservar — no cambia si luego se edita la tarifa del
+   espacio). El total es la suma de esos espacios.
+3. **Choque de horario**: no se puede crear una reserva que se solape en el
+   tiempo con otra reserva activa (no cancelada) que use alguno de los mismos
+   espacios.
+4. Igual que las entradas: **registrar sin pagar** deja la reserva como
+   **cuenta abierta** (`paymentMethod = null`), y en Tienda se puede "Cargar
+   a cuenta" eligiendo esa reserva en vez de la de una entrada — el selector
+   del carrito ahora agrupa "Entradas" y "Alquileres". **"Cobrar y
+   finalizar"** (`POST /rentals/:id/settle`) cobra reserva + pedidos
+   pendientes juntos y marca la reserva como `COMPLETADO`.
+5. Una reserva pagada **al reservar** ("Pagar ahora") no admite cargos de
+   tienda después. Se marca como finalizada con `POST /rentals/:id/complete`
+   (no mueve dinero, solo cierra el estado) cuando el evento ya terminó.
+6. Solo se puede **cancelar** (`POST /rentals/:id/cancel`) una reserva que
+   siga `RESERVADO` y sin pagar — una vez cobrada, ya no se cancela.
+
+### Modelo de datos
+
+- `RentalSpace`: catálogo de espacios por tenant (`name`, `price`, `isActive`).
+- `Rental`: `customerName`, `phone?`, `startAt`, `endAt`, `status`
+  (`RESERVADO`/`COMPLETADO`/`CANCELADO`), `totalAmount`, `paymentMethod?`,
+  `amountPaid?`, `change`, `cashierSessionId?`, `paidAt?`, `notes?`.
+- `RentalItem`: espacio(s) incluidos en una reserva, con el precio congelado
+  al momento de reservar.
+- `Order` (tienda): + `rentalId?` — vínculo opcional a la reserva a la que se
+  cargó el pedido (análogo a `accessEntryId`).
+
+### Endpoints nuevos
+
+- `GET/POST /rentals/spaces`, `PATCH /rentals/spaces/:id` (ADMIN/SUPERADMIN
+  para crear/editar) — catálogo de espacios.
+- `GET /rentals` — últimas 100 reservas con sus espacios y pedidos.
+- `POST /rentals` — crea reserva; sin datos de pago = cuenta abierta.
+- `POST /rentals/:id/cancel` — cancela (solo si no pagó).
+- `POST /rentals/:id/complete` — cierra una reserva ya pagada al reservar.
+- `GET /rentals/open-tabs` — reservas sin pagar con sus pedidos pendientes.
+- `POST /rentals/:id/settle` — cobra reserva + pedidos pendientes y cierra.
+- `GET /rentals/sales` — reservas ya cobradas, para el cuaderno de ventas.
+- `POST /store/orders` — admite `rentalId` opcional (igual que
+  `accessEntryId`) para cargar el pedido a una cuenta de alquiler abierta.
+
+### UI
+
+- Nueva sección `/alquiler`: catálogo de espacios (panel "Espacios"), formulario
+  de nueva reserva (cliente, horario, selección de espacios, pagar ahora vs.
+  cuenta abierta), lista de reservas activas (con "Cobrar y finalizar" o
+  "Completar" según corresponda) e historial de completadas/canceladas.
+- Tienda (`/tienda`): el selector "Cargar a cuenta" del carrito ahora agrupa
+  entradas y alquileres abiertos.
+- Cuaderno de ventas (`/ventas`): combina `/store/sales` + `/access/sales` +
+  `/rentals/sales`; los pedidos ya cargados a una entrada o alquiler se
+  excluyen de `/store/sales` en esta vista para no duplicarlos.

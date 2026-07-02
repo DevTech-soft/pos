@@ -42,6 +42,12 @@ export class StoreService {
       });
       if (!entry) throw new BadRequestException('Cuenta abierta no encontrada');
     }
+    if (dto.rentalId) {
+      const rental = await this.prisma.rental.findFirst({
+        where: { id: dto.rentalId, tenantId, paymentMethod: null, status: 'RESERVADO' },
+      });
+      if (!rental) throw new BadRequestException('Cuenta de alquiler no encontrada');
+    }
 
     for (const item of dto.items) {
       const variant = variants.find(v => v.id === item.productVariantId)!;
@@ -79,6 +85,7 @@ export class StoreService {
           customerName: dto.customerName,
           notes: dto.notes,
           accessEntryId: dto.accessEntryId,
+          rentalId: dto.rentalId,
           totalAmount,
           items: { create: items },
         },
