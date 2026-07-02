@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutGrid, ShoppingCart, Landmark, ClipboardList,
   Receipt, LogOut, ChevronLeft, ChevronRight,
-  Waves, Users, DollarSign, Building2, UserCheck, Package, CalendarClock,
+  Waves, Users, DollarSign, Building2, UserCheck, Package, CalendarClock, BarChart3,
 } from 'lucide-react'
 import { cn, rolLabel } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth-store'
@@ -27,9 +27,10 @@ const NAV_ITEMS: {
   { href: '/inventario',    label: 'Inventario',   icon: Package,     roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+5', activeColor: 'emerald' },
   { href: '/caja',          label: 'Caja',         icon: Landmark,    roles: ['ADMIN', 'CAJERO'],              shortcut: 'Alt+6' },
   { href: '/ventas',        label: 'Ventas',       icon: ClipboardList, roles: ['ADMIN', 'CAJERO'],            shortcut: 'Alt+7' },
-  { href: '/empleados',     label: 'Empleados',    icon: Users,       roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+8', activeColor: 'violet' },
-  { href: '/nomina',        label: 'Nómina',       icon: DollarSign,  roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+9', activeColor: 'violet' },
-  { href: '/gastos',        label: 'Gastos',       icon: Receipt,     roles: ['ADMIN'],                        shortcut: 'Alt+0', activeColor: 'rose' },
+  { href: '/metricas',      label: 'Métricas',     icon: BarChart3,   roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+8', activeColor: 'emerald' },
+  { href: '/empleados',     label: 'Empleados',    icon: Users,       roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+9', activeColor: 'violet' },
+  { href: '/nomina',        label: 'Nómina',       icon: DollarSign,  roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+0', activeColor: 'violet' },
+  { href: '/gastos',        label: 'Gastos',       icon: Receipt,     roles: ['ADMIN'],                        shortcut: '', activeColor: 'rose' },
   { href: '/tenants',       label: 'Piscinas',     icon: Building2,   roles: ['SUPERADMIN'],                   shortcut: '', activeColor: 'amber' },
 ]
 

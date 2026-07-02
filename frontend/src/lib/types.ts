@@ -263,3 +263,37 @@ export interface PayrollPeriod {
   closedAt?: string
   entries: PayrollEntry[]
 }
+
+export interface MetricsSummary {
+  ingresos: { tienda: number; entradas: number; alquiler: number; otros: number; total: number }
+  egresos: { generales: number; caja: number; nomina: number; compras: number; total: number }
+  neto: number
+  ticketPromedioTienda: number
+  ticketPromedioEntrada: number
+  countVentas: number
+  countEntradas: number
+  countAlquileres: number
+}
+
+export interface MetricsTimeseriesPoint {
+  date: string
+  ingresos: number
+  egresos: number
+}
+
+export interface PaymentMethodBreakdown {
+  method: PaymentMethod
+  total: number
+}
+
+export interface ExpenseBreakdownItem {
+  label: string
+  total: number
+}
+
+export interface TopProduct {
+  productName: string
+  variantName: string
+  quantity: number
+  revenue: number
+}

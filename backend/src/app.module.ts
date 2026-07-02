@@ -13,6 +13,7 @@ import { RentalsModule } from './modules/rentals/rentals.module';
 import { EmployeesModule } from './modules/employees/employees.module';
 import { PayrollModule } from './modules/payroll/payroll.module';
 import { GeneralExpensesModule } from './modules/general-expenses/general-expenses.module';
+import { MetricsModule } from './modules/metrics/metrics.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { GeneralExpensesModule } from './modules/general-expenses/general-expens
     EmployeesModule,
     PayrollModule,
     GeneralExpensesModule,
+    MetricsModule,
   ],
 })
 export class AppModule {}
