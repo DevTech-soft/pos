@@ -7,8 +7,8 @@ import { CalendarClock, CalendarPlus, Receipt, Wallet, Settings, XCircle, CheckC
 import { toast } from 'sonner'
 import type { Rental, RentalSpace, CashierSession } from '@/lib/types'
 
-const inputCls = 'w-full bg-[#141B28] border border-[#1C2535] rounded-xl px-4 py-2.5 text-[14px] text-[#EDF2F7] placeholder:text-[#2A3A52] outline-none focus:border-violet-500/50'
-const labelCls = 'text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block mb-2'
+const inputCls = 'w-full bg-[#1A2333] border border-[#2A3650] rounded-xl px-4 py-2.5 text-[14px] text-[#F3F6FA] placeholder:text-[#3C4A68] outline-none focus:border-violet-500/50'
+const labelCls = 'text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block mb-2'
 
 function toLocalInputValue(d: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0')
@@ -148,41 +148,41 @@ export default function AlquilerPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[24px] font-bold text-[#EDF2F7]">Alquiler de espacios</h1>
-          <p className="text-[#4A5568] text-sm mt-1">Reservas de piscina, salones y demás espacios</p>
+          <h1 className="text-[24px] font-bold text-[#F3F6FA]">Alquiler de espacios</h1>
+          <p className="text-[#7E8CA6] text-sm mt-1">Reservas de piscina, salones y demás espacios</p>
         </div>
         <button onClick={() => setShowSpaces(v => !v)}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#141B28] border border-[#1C2535] text-[#8B96A8] hover:text-violet-400 hover:border-violet-500/30 transition-colors text-[13px]">
+          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#1A2333] border border-[#2A3650] text-[#A7B3C7] hover:text-violet-400 hover:border-violet-500/30 transition-colors text-[13px]">
           <Settings size={15} /> Espacios
         </button>
       </div>
 
       {showSpaces && (
-        <div className="bg-[#101520] border border-violet-500/20 rounded-2xl p-5">
-          <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4">Catálogo de espacios</h2>
+        <div className="bg-[#121927] border border-violet-500/20 rounded-2xl p-5">
+          <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4">Catálogo de espacios</h2>
           <div className="space-y-2 mb-4">
             {spaces.map(s => (
-              <div key={s.id} className="flex items-center gap-3 bg-[#141B28] rounded-xl p-3">
+              <div key={s.id} className="flex items-center gap-3 bg-[#1A2333] rounded-xl p-3">
                 <input
                   value={s.name}
                   onChange={e => updateSpace.mutate({ id: s.id, data: { name: e.target.value } })}
-                  className="flex-1 bg-transparent text-[14px] text-[#EDF2F7] outline-none"
+                  className="flex-1 bg-transparent text-[14px] text-[#F3F6FA] outline-none"
                 />
                 <input
                   type="number"
                   value={s.price}
                   onChange={e => updateSpace.mutate({ id: s.id, data: { price: Number(e.target.value) } })}
-                  className="w-32 bg-[#0C1018] border border-[#1C2535] rounded-lg px-2 py-1.5 text-[13px] text-[#EDF2F7] outline-none focus:border-violet-500/50"
+                  className="w-32 bg-[#0B0F17] border border-[#2A3650] rounded-lg px-2 py-1.5 text-[13px] text-[#F3F6FA] outline-none focus:border-violet-500/50"
                 />
                 <button
                   onClick={() => updateSpace.mutate({ id: s.id, data: { isActive: !s.isActive } })}
-                  className={`text-[11px] font-medium rounded-lg px-2.5 py-1.5 border transition-colors ${s.isActive ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-[#0C1018] border-[#1C2535] text-[#4A5568]'}`}
+                  className={`text-[11px] font-medium rounded-lg px-2.5 py-1.5 border transition-colors ${s.isActive ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-[#0B0F17] border-[#2A3650] text-[#7E8CA6]'}`}
                 >
                   {s.isActive ? 'Activo' : 'Inactivo'}
                 </button>
               </div>
             ))}
-            {spaces.length === 0 && <p className="text-[#4A5568] text-sm text-center py-3">Sin espacios registrados</p>}
+            {spaces.length === 0 && <p className="text-[#7E8CA6] text-sm text-center py-3">Sin espacios registrados</p>}
           </div>
           <div className="flex gap-2">
             <input value={newSpaceName} onChange={e => setNewSpaceName(e.target.value)} placeholder="Nombre del espacio"
@@ -202,8 +202,8 @@ export default function AlquilerPage() {
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Form */}
-        <div className="bg-[#101520] border border-[#1C2535] rounded-2xl p-5">
-          <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4 flex items-center gap-2">
+        <div className="bg-[#121927] border border-[#2A3650] rounded-2xl p-5">
+          <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4 flex items-center gap-2">
             <CalendarPlus size={16} className="text-violet-400" />
             Nueva reserva
           </h2>
@@ -234,8 +234,8 @@ export default function AlquilerPage() {
               <label className={labelCls}>Espacios</label>
               <div className="space-y-1.5">
                 {spaces.filter(s => s.isActive).map(s => (
-                  <label key={s.id} className={`flex items-center justify-between rounded-xl px-3 py-2.5 border cursor-pointer transition-colors ${selectedSpaceIds.includes(s.id) ? 'bg-violet-500/15 border-violet-500/40' : 'bg-[#141B28] border-[#1C2535] hover:border-violet-500/20'}`}>
-                    <span className="flex items-center gap-2 text-[13px] text-[#EDF2F7]">
+                  <label key={s.id} className={`flex items-center justify-between rounded-xl px-3 py-2.5 border cursor-pointer transition-colors ${selectedSpaceIds.includes(s.id) ? 'bg-violet-500/15 border-violet-500/40' : 'bg-[#1A2333] border-[#2A3650] hover:border-violet-500/20'}`}>
+                    <span className="flex items-center gap-2 text-[13px] text-[#F3F6FA]">
                       <input type="checkbox" checked={selectedSpaceIds.includes(s.id)} onChange={() => toggleSpace(s.id)} className="accent-violet-500" />
                       {s.name}
                     </span>
@@ -243,23 +243,23 @@ export default function AlquilerPage() {
                   </label>
                 ))}
                 {spaces.filter(s => s.isActive).length === 0 && (
-                  <p className="text-[#4A5568] text-sm text-center py-3">Crea un espacio primero</p>
+                  <p className="text-[#7E8CA6] text-sm text-center py-3">Crea un espacio primero</p>
                 )}
               </div>
             </div>
 
-            <div className="flex justify-between items-center bg-[#141B28] rounded-xl p-3">
-              <span className="text-[13px] text-[#4A5568]">Total de la reserva</span>
+            <div className="flex justify-between items-center bg-[#1A2333] rounded-xl p-3">
+              <span className="text-[13px] text-[#7E8CA6]">Total de la reserva</span>
               <span className="text-[18px] font-bold text-violet-400">{formatCurrency(total)}</span>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <button onClick={() => setPayNow(true)}
-                className={`py-2.5 rounded-xl text-[12px] font-medium border transition-colors flex items-center justify-center gap-1.5 ${payNow ? 'bg-violet-500/20 border-violet-500/50 text-violet-400' : 'bg-[#141B28] border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]'}`}>
+                className={`py-2.5 rounded-xl text-[12px] font-medium border transition-colors flex items-center justify-center gap-1.5 ${payNow ? 'bg-violet-500/20 border-violet-500/50 text-violet-400' : 'bg-[#1A2333] border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]'}`}>
                 <Wallet size={13} /> Pagar ahora
               </button>
               <button onClick={() => setPayNow(false)}
-                className={`py-2.5 rounded-xl text-[12px] font-medium border transition-colors flex items-center justify-center gap-1.5 ${!payNow ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#141B28] border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]'}`}>
+                className={`py-2.5 rounded-xl text-[12px] font-medium border transition-colors flex items-center justify-center gap-1.5 ${!payNow ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#1A2333] border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]'}`}>
                 <Receipt size={13} /> Dejar cuenta abierta
               </button>
             </div>
@@ -271,7 +271,7 @@ export default function AlquilerPage() {
                   <div className="grid grid-cols-2 gap-2">
                     {['EFECTIVO', 'TARJETA', 'TRANSFERENCIA', 'QR'].map(m => (
                       <button key={m} onClick={() => setPayMethod(m)}
-                        className={`py-2 rounded-xl text-[12px] font-medium border transition-colors ${payMethod === m ? 'bg-violet-500/20 border-violet-500/50 text-violet-400' : 'bg-[#141B28] border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]'}`}>
+                        className={`py-2 rounded-xl text-[12px] font-medium border transition-colors ${payMethod === m ? 'bg-violet-500/20 border-violet-500/50 text-violet-400' : 'bg-[#1A2333] border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]'}`}>
                         {m}
                       </button>
                     ))}
@@ -313,13 +313,13 @@ export default function AlquilerPage() {
 
         {/* Reservations */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-[#101520] border border-[#1C2535] rounded-2xl p-5">
-            <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4 flex items-center gap-2">
+          <div className="bg-[#121927] border border-[#2A3650] rounded-2xl p-5">
+            <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4 flex items-center gap-2">
               <CalendarClock size={16} className="text-violet-400" />
               Reservas activas ({reservados.length})
             </h2>
             {reservados.length === 0
-              ? <p className="text-[#4A5568] text-sm text-center py-4">No hay reservas activas</p>
+              ? <p className="text-[#7E8CA6] text-sm text-center py-4">No hay reservas activas</p>
               : (
                 <div className="space-y-2 max-h-[32rem] overflow-y-auto">
                   {reservados.map(r => {
@@ -328,17 +328,17 @@ export default function AlquilerPage() {
                     const isSettling = settlingId === r.id
                     const pendingOrders = (r.orders ?? []).filter(o => o.status === 'PENDIENTE')
                     return (
-                      <div key={r.id} className="bg-[#141B28] rounded-xl p-3">
+                      <div key={r.id} className="bg-[#1A2333] rounded-xl p-3">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-[14px] font-medium text-[#EDF2F7] flex items-center gap-2">
+                            <p className="text-[14px] font-medium text-[#F3F6FA] flex items-center gap-2">
                               {r.customerName}
                               {isTab && <span className="text-[10px] bg-amber-500/15 border border-amber-500/30 text-amber-400 rounded-md px-1.5 py-0.5">Cuenta abierta</span>}
                             </p>
                             <div className="flex items-center gap-3 mt-0.5 flex-wrap">
                               <span className="text-[12px] text-violet-400">{r.items.map(i => i.space.name).join(', ')}</span>
                               <span className="text-[12px] text-emerald-400">{formatCurrency(total)}</span>
-                              <span className="text-[12px] text-[#4A5568] flex items-center gap-1">
+                              <span className="text-[12px] text-[#7E8CA6] flex items-center gap-1">
                                 <Clock size={11} /> {formatDateTime(r.startAt)} → {formatDateTime(r.endAt)}
                               </span>
                             </div>
@@ -349,7 +349,7 @@ export default function AlquilerPage() {
                                 <button
                                   onClick={() => cancelRental.mutate(r.id)}
                                   disabled={cancelRental.isPending}
-                                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0C1018] border border-[#1C2535] text-[#4A5568] hover:text-rose-400 text-[12px] font-medium transition-colors"
+                                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0B0F17] border border-[#2A3650] text-[#7E8CA6] hover:text-rose-400 text-[12px] font-medium transition-colors"
                                 >
                                   <XCircle size={13} />
                                 </button>
@@ -375,24 +375,24 @@ export default function AlquilerPage() {
                         </div>
 
                         {isTab && pendingOrders.length > 0 && (
-                          <div className="mt-2 pt-2 border-t border-[#1C2535] space-y-1">
+                          <div className="mt-2 pt-2 border-t border-[#2A3650] space-y-1">
                             {pendingOrders.map(o => (
                               <div key={o.id} className="flex justify-between text-[12px]">
-                                <span className="text-[#4A5568]">
+                                <span className="text-[#7E8CA6]">
                                   {o.items.map(i => `${i.productVariant.product?.name} (${i.productVariant.name}) ×${i.quantity}`).join(', ')}
                                 </span>
-                                <span className="text-[#8B96A8]">{formatCurrency(Number(o.totalAmount))}</span>
+                                <span className="text-[#A7B3C7]">{formatCurrency(Number(o.totalAmount))}</span>
                               </div>
                             ))}
                           </div>
                         )}
 
                         {isSettling && isTab && (
-                          <div className="mt-3 pt-3 border-t border-[#1C2535] space-y-3">
+                          <div className="mt-3 pt-3 border-t border-[#2A3650] space-y-3">
                             <div className="grid grid-cols-4 gap-1.5">
                               {['EFECTIVO', 'TARJETA', 'TRANSFERENCIA', 'QR'].map(m => (
                                 <button key={m} onClick={() => setSettleMethod(m)}
-                                  className={`py-1.5 rounded-lg text-[11px] font-medium border transition-colors ${settleMethod === m ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#0C1018] border-[#1C2535] text-[#4A5568]'}`}>
+                                  className={`py-1.5 rounded-lg text-[11px] font-medium border transition-colors ${settleMethod === m ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#0B0F17] border-[#2A3650] text-[#7E8CA6]'}`}>
                                   {m}
                                 </button>
                               ))}
@@ -400,8 +400,8 @@ export default function AlquilerPage() {
                             <div className="flex items-center gap-2">
                               <input type="number" value={settleAmountPaid} onChange={ev => setSettleAmountPaid(ev.target.value)}
                                 placeholder={String(total)}
-                                className="flex-1 bg-[#0C1018] border border-[#1C2535] rounded-lg px-3 py-2 text-[13px] text-[#EDF2F7] outline-none focus:border-amber-500/50" />
-                              <button onClick={() => setSettlingId(null)} className="px-3 py-2 rounded-lg border border-[#1C2535] text-[#4A5568] text-[12px]">Cancelar</button>
+                                className="flex-1 bg-[#0B0F17] border border-[#2A3650] rounded-lg px-3 py-2 text-[13px] text-[#F3F6FA] outline-none focus:border-amber-500/50" />
+                              <button onClick={() => setSettlingId(null)} className="px-3 py-2 rounded-lg border border-[#2A3650] text-[#7E8CA6] text-[12px]">Cancelar</button>
                               <button onClick={() => settleRental.mutate(r.id)}
                                 disabled={!session || !settleAmountPaid || Number(settleAmountPaid) < total || settleRental.isPending}
                                 className="px-3 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 text-[12px] font-medium disabled:opacity-40">
@@ -422,24 +422,24 @@ export default function AlquilerPage() {
             }
           </div>
 
-          <div className="bg-[#101520] border border-[#1C2535] rounded-2xl p-5">
-            <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4 flex items-center gap-2">
-              <CalendarClock size={16} className="text-[#4A5568]" />
+          <div className="bg-[#121927] border border-[#2A3650] rounded-2xl p-5">
+            <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4 flex items-center gap-2">
+              <CalendarClock size={16} className="text-[#7E8CA6]" />
               Historial ({historial.length})
             </h2>
             {historial.length === 0
-              ? <p className="text-[#4A5568] text-sm text-center py-4">Sin reservas finalizadas o canceladas</p>
+              ? <p className="text-[#7E8CA6] text-sm text-center py-4">Sin reservas finalizadas o canceladas</p>
               : (
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {historial.map(r => (
-                    <div key={r.id} className="flex items-center justify-between p-3 bg-[#141B28] rounded-xl opacity-70">
-                      <p className="text-[13px] text-[#8B96A8] flex items-center gap-2">
+                    <div key={r.id} className="flex items-center justify-between p-3 bg-[#1A2333] rounded-xl opacity-70">
+                      <p className="text-[13px] text-[#A7B3C7] flex items-center gap-2">
                         {r.customerName} · {r.items.map(i => i.space.name).join(', ')} · {formatCurrency(Number(r.totalAmount))}
                         <span className={`text-[10px] rounded-md px-1.5 py-0.5 border ${r.status === 'CANCELADO' ? 'bg-rose-500/10 border-rose-500/25 text-rose-400' : 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400'}`}>
                           {r.status === 'CANCELADO' ? 'Cancelada' : 'Completada'}
                         </span>
                       </p>
-                      <span className="text-[12px] text-[#4A5568]">{formatDateTime(r.startAt)}</span>
+                      <span className="text-[12px] text-[#7E8CA6]">{formatDateTime(r.startAt)}</span>
                     </div>
                   ))}
                 </div>

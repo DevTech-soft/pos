@@ -66,12 +66,12 @@ export function Sidebar() {
   )
 
   const colorMap: Record<string, string> = {
-    cyan:   'text-cyan-400 bg-cyan-500/8 border-cyan-500/20',
-    violet: 'text-violet-400 bg-violet-500/8 border-violet-500/20',
-    rose:   'text-rose-400 bg-rose-500/8 border-rose-500/20',
-    amber:  'text-amber-400 bg-amber-500/8 border-amber-500/20',
-    emerald:'text-emerald-400 bg-emerald-500/8 border-emerald-500/20',
-    default:'text-sky-400 bg-sky-500/8 border-sky-500/20',
+    cyan:   'text-cyan-400 bg-cyan-500/14 border-cyan-500/20',
+    violet: 'text-violet-400 bg-violet-500/14 border-violet-500/20',
+    rose:   'text-rose-400 bg-rose-500/14 border-rose-500/20',
+    amber:  'text-amber-400 bg-amber-500/14 border-amber-500/20',
+    emerald:'text-emerald-400 bg-emerald-500/14 border-emerald-500/20',
+    default:'text-sky-400 bg-sky-500/14 border-sky-500/20',
   }
   const barMap: Record<string, string> = {
     cyan:   'bg-gradient-to-b from-cyan-400 to-cyan-600 shadow-cyan-500/50',
@@ -98,7 +98,7 @@ export function Sidebar() {
 
       <aside className={cn(
         'flex flex-col h-screen z-40',
-        'bg-[#0C1018] border-r border-[#1C2535]',
+        'bg-[#0B0F17] border-r border-[#2A3650]',
         'transition-[width] duration-[250ms] ease-in-out overflow-hidden',
         'lg:sticky lg:top-0 lg:flex-shrink-0',
         'max-lg:fixed max-lg:inset-y-0 max-lg:left-0',
@@ -106,7 +106,7 @@ export function Sidebar() {
       )}>
         {/* Logo */}
         <div className={cn(
-          'h-[64px] flex items-center border-b border-[#1C2535] flex-shrink-0',
+          'h-[64px] flex items-center border-b border-[#2A3650] flex-shrink-0',
           collapsed ? 'justify-center px-4' : 'px-5 justify-between',
         )}>
           <div className="flex items-center gap-3 min-w-0">
@@ -115,15 +115,15 @@ export function Sidebar() {
             </div>
             {!collapsed && (
               <div className="min-w-0">
-                <p className="text-[15px] font-bold text-[#EDF2F7] leading-none tracking-tight">POOL MANAGER</p>
-                <p className="text-[11px] text-[#4A5568] mt-0.5 leading-none">
+                <p className="text-[15px] font-bold text-[#F3F6FA] leading-none tracking-tight">POOL MANAGER</p>
+                <p className="text-[11px] text-[#7E8CA6] mt-0.5 leading-none">
                   {user?.tenant?.name ?? 'Control de piscina'}
                 </p>
               </div>
             )}
           </div>
           {!collapsed && (
-            <button onClick={toggleCollapse} className="w-7 h-7 flex items-center justify-center text-[#4A5568] hover:text-[#8B96A8] transition-colors rounded-lg hover:bg-[#141B28]">
+            <button onClick={toggleCollapse} className="w-7 h-7 flex items-center justify-center text-[#7E8CA6] hover:text-[#A7B3C7] transition-colors rounded-lg hover:bg-[#1A2333]">
               <ChevronLeft size={15} />
             </button>
           )}
@@ -132,7 +132,7 @@ export function Sidebar() {
         {/* Nav */}
         <nav className="flex-1 flex flex-col py-4 gap-1 px-3 overflow-y-auto overflow-x-hidden">
           {!collapsed && (
-            <p className="text-[10px] font-semibold text-[#2A3A52] uppercase tracking-[0.15em] px-2 mb-2">
+            <p className="text-[10px] font-semibold text-[#3C4A68] uppercase tracking-[0.15em] px-2 mb-2">
               Navegación
             </p>
           )}
@@ -147,7 +147,7 @@ export function Sidebar() {
                 className={cn(
                   'relative group flex items-center rounded-xl transition-all duration-150 select-none',
                   collapsed ? 'h-11 w-11 mx-auto justify-center' : 'h-11 px-3 gap-3.5',
-                  active ? cn('border', colorMap[colorKey]) : 'text-[#4A5568] hover:text-[#8B96A8] hover:bg-[#141B28]',
+                  active ? cn('border', colorMap[colorKey]) : 'text-[#7E8CA6] hover:text-[#A7B3C7] hover:bg-[#1A2333]',
                 )}
               >
                 {active && !collapsed && (
@@ -157,13 +157,13 @@ export function Sidebar() {
                 {!collapsed && (
                   <>
                     <span className="text-[14px] font-medium flex-1 leading-none">{label}</span>
-                    <span className="text-[11px] flex-shrink-0 text-[#263347] group-hover:text-[#2A3A52] leading-none">{shortcut}</span>
+                    <span className="text-[11px] flex-shrink-0 text-[#3C4A68] group-hover:text-[#3C4A68] leading-none">{shortcut}</span>
                   </>
                 )}
                 {collapsed && (
-                  <span className="pointer-events-none absolute left-full ml-3 z-50 px-3 py-2 rounded-xl text-[13px] font-medium whitespace-nowrap bg-[#141B28] border border-[#1C2535] text-[#EDF2F7] shadow-2xl shadow-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+                  <span className="pointer-events-none absolute left-full ml-3 z-50 px-3 py-2 rounded-xl text-[13px] font-medium whitespace-nowrap bg-[#1A2333] border border-[#2A3650] text-[#F3F6FA] shadow-2xl shadow-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
                     {label}
-                    <span className="ml-2 text-[#4A5568] text-[11px]">{shortcut}</span>
+                    <span className="ml-2 text-[#7E8CA6] text-[11px]">{shortcut}</span>
                   </span>
                 )}
               </Link>
@@ -172,26 +172,26 @@ export function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-[#1C2535] py-4 px-3 space-y-2 flex-shrink-0">
+        <div className="border-t border-[#2A3650] py-4 px-3 space-y-2 flex-shrink-0">
           {collapsed && (
-            <button onClick={toggleCollapse} className="w-11 h-11 mx-auto flex items-center justify-center text-[#4A5568] hover:text-[#8B96A8] transition-colors rounded-xl hover:bg-[#141B28]">
+            <button onClick={toggleCollapse} className="w-11 h-11 mx-auto flex items-center justify-center text-[#7E8CA6] hover:text-[#A7B3C7] transition-colors rounded-xl hover:bg-[#1A2333]">
               <ChevronRight size={15} />
             </button>
           )}
-          <div className={cn('flex items-center rounded-xl p-2 transition-colors hover:bg-[#141B28]', collapsed ? 'justify-center' : 'gap-3')}>
+          <div className={cn('flex items-center rounded-xl p-2 transition-colors hover:bg-[#1A2333]', collapsed ? 'justify-center' : 'gap-3')}>
             <div title={collapsed ? `${user?.name ?? ''} · ${user?.role ? rolLabel(user.role) : ''}` : undefined}
               className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 cursor-default bg-gradient-to-br from-sky-400 to-blue-600 text-white text-[14px] font-bold shadow-md shadow-sky-500/25">
               {inicialUsuario}
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-semibold text-[#EDF2F7] truncate leading-tight">{user?.name}</p>
-                <p className="text-[11px] text-[#4A5568] truncate mt-0.5">{user?.role ? rolLabel(user.role) : ''}</p>
+                <p className="text-[13px] font-semibold text-[#F3F6FA] truncate leading-tight">{user?.name}</p>
+                <p className="text-[11px] text-[#7E8CA6] truncate mt-0.5">{user?.role ? rolLabel(user.role) : ''}</p>
               </div>
             )}
           </div>
           <button onClick={handleLogout} title={collapsed ? 'Cerrar sesión' : undefined}
-            className={cn('flex items-center rounded-xl text-[#4A5568] hover:text-rose-400 hover:bg-rose-500/8 transition-all border border-transparent hover:border-rose-500/15',
+            className={cn('flex items-center rounded-xl text-[#7E8CA6] hover:text-rose-400 hover:bg-rose-500/14 transition-all border border-transparent hover:border-rose-500/15',
               collapsed ? 'w-11 h-11 mx-auto justify-center' : 'w-full h-10 px-3 gap-3')}>
             <LogOut size={16} className="flex-shrink-0" />
             {!collapsed && <span className="text-[13px] font-medium">Cerrar sesión</span>}

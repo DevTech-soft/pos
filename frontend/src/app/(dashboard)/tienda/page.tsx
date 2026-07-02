@@ -123,15 +123,15 @@ export default function TiendaPage() {
     <div className="flex h-full">
       {/* Products */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        <h1 className="text-[24px] font-bold text-[#EDF2F7]">Tienda</h1>
+        <h1 className="text-[24px] font-bold text-[#F3F6FA]">Tienda</h1>
         {categories.map(cat => (
           <div key={cat}>
-            <h2 className="text-[13px] font-semibold text-[#4A5568] uppercase tracking-[0.15em] mb-3">{cat}</h2>
+            <h2 className="text-[13px] font-semibold text-[#7E8CA6] uppercase tracking-[0.15em] mb-3">{cat}</h2>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
               {products.filter(p => p.category === cat).map(p => (
-                <div key={p.id} className="bg-[#101520] border border-[#1C2535] rounded-2xl p-4">
-                  <p className="text-[14px] font-medium text-[#EDF2F7]">{p.name}</p>
-                  {p.brand && <p className="text-[11px] text-[#4A5568] mt-0.5">{p.brand}</p>}
+                <div key={p.id} className="bg-[#121927] border border-[#2A3650] rounded-2xl p-4">
+                  <p className="text-[14px] font-medium text-[#F3F6FA]">{p.name}</p>
+                  {p.brand && <p className="text-[11px] text-[#7E8CA6] mt-0.5">{p.brand}</p>}
                   <div className="mt-3 space-y-1.5">
                     {p.variants.map(v => {
                       const inCartQty = cartQuantity(v.id)
@@ -141,11 +141,11 @@ export default function TiendaPage() {
                           key={v.id}
                           onClick={() => addToCart(p, v)}
                           disabled={outOfStock}
-                          className="w-full flex items-center justify-between rounded-xl px-3 py-2 bg-[#141B28] border border-[#1C2535] hover:border-sky-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors group"
+                          className="w-full flex items-center justify-between rounded-xl px-3 py-2 bg-[#1A2333] border border-[#2A3650] hover:border-sky-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors group"
                         >
-                          <span className="text-[12px] text-[#8B96A8] group-hover:text-sky-400 transition-colors truncate">{v.name}</span>
+                          <span className="text-[12px] text-[#A7B3C7] group-hover:text-sky-400 transition-colors truncate">{v.name}</span>
                           <span className="flex items-center gap-2 flex-shrink-0">
-                            <span className={`text-[10px] ${outOfStock ? 'text-rose-400' : 'text-[#4A5568]'}`}>
+                            <span className={`text-[10px] ${outOfStock ? 'text-rose-400' : 'text-[#7E8CA6]'}`}>
                               {outOfStock ? 'Sin stock' : `${v.stock - inCartQty} disp.`}
                             </span>
                             <span className="text-[13px] font-bold text-sky-400">{formatCurrency(Number(v.price))}</span>
@@ -160,14 +160,14 @@ export default function TiendaPage() {
           </div>
         ))}
         {products.length === 0 && (
-          <p className="text-[#4A5568] text-center py-8">No hay productos disponibles para la venta</p>
+          <p className="text-[#7E8CA6] text-center py-8">No hay productos disponibles para la venta</p>
         )}
       </div>
 
       {/* Cart */}
-      <div className="w-72 border-l border-[#1C2535] bg-[#0C1018] flex flex-col">
-        <div className="p-5 border-b border-[#1C2535]">
-          <h2 className="text-[16px] font-semibold text-[#EDF2F7] flex items-center gap-2">
+      <div className="w-72 border-l border-[#2A3650] bg-[#0B0F17] flex flex-col">
+        <div className="p-5 border-b border-[#2A3650]">
+          <h2 className="text-[16px] font-semibold text-[#F3F6FA] flex items-center gap-2">
             <ShoppingCart size={16} className="text-sky-400" />
             Carrito ({cart.reduce((a, i) => a + i.quantity, 0)})
           </h2>
@@ -175,23 +175,23 @@ export default function TiendaPage() {
 
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
           {cart.length === 0
-            ? <p className="text-[#4A5568] text-sm text-center py-8">Sin productos</p>
+            ? <p className="text-[#7E8CA6] text-sm text-center py-8">Sin productos</p>
             : cart.map(item => (
-              <div key={item.variant.id} className="flex items-center gap-3 p-3 bg-[#141B28] rounded-xl">
+              <div key={item.variant.id} className="flex items-center gap-3 p-3 bg-[#1A2333] rounded-xl">
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-medium text-[#EDF2F7] truncate">{item.productName}</p>
-                  <p className="text-[11px] text-[#4A5568] truncate">{item.variant.name}</p>
+                  <p className="text-[13px] font-medium text-[#F3F6FA] truncate">{item.productName}</p>
+                  <p className="text-[11px] text-[#7E8CA6] truncate">{item.variant.name}</p>
                   <p className="text-[12px] text-sky-400">{formatCurrency(Number(item.variant.price))}</p>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <button onClick={() => removeFromCart(item.variant.id)} className="w-6 h-6 rounded-lg bg-[#1C2535] text-[#8B96A8] hover:text-rose-400 flex items-center justify-center">
+                  <button onClick={() => removeFromCart(item.variant.id)} className="w-6 h-6 rounded-lg bg-[#2A3650] text-[#A7B3C7] hover:text-rose-400 flex items-center justify-center">
                     {item.quantity === 1 ? <Trash2 size={11} /> : <Minus size={11} />}
                   </button>
-                  <span className="text-[13px] font-medium text-[#EDF2F7] w-5 text-center">{item.quantity}</span>
+                  <span className="text-[13px] font-medium text-[#F3F6FA] w-5 text-center">{item.quantity}</span>
                   <button onClick={() => {
                     const product = products.find(p => p.id === item.variant.productId)
                     if (product) addToCart(product, item.variant)
-                  }} className="w-6 h-6 rounded-lg bg-[#1C2535] text-[#8B96A8] hover:text-sky-400 flex items-center justify-center">
+                  }} className="w-6 h-6 rounded-lg bg-[#2A3650] text-[#A7B3C7] hover:text-sky-400 flex items-center justify-center">
                     <Plus size={11} />
                   </button>
                 </div>
@@ -200,13 +200,13 @@ export default function TiendaPage() {
           }
         </div>
 
-        <div className="p-5 border-t border-[#1C2535] space-y-4">
+        <div className="p-5 border-t border-[#2A3650] space-y-4">
           <div>
-            <label className="text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block mb-2 flex items-center gap-1.5">
+            <label className="text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block mb-2 flex items-center gap-1.5">
               <Receipt size={12} /> Cargar a cuenta (opcional)
             </label>
             <select value={chargeTarget} onChange={e => setChargeTarget(e.target.value)}
-              className="w-full bg-[#141B28] border border-[#1C2535] rounded-xl px-3 py-2.5 text-[13px] text-[#EDF2F7] outline-none focus:border-sky-500/50">
+              className="w-full bg-[#1A2333] border border-[#2A3650] rounded-xl px-3 py-2.5 text-[13px] text-[#F3F6FA] outline-none focus:border-sky-500/50">
               <option value="">— Cobrar ahora —</option>
               {openTabs.length > 0 && (
                 <optgroup label="Entradas">
@@ -226,7 +226,7 @@ export default function TiendaPage() {
           </div>
 
           <div className="flex justify-between">
-            <span className="text-[14px] text-[#4A5568]">Total</span>
+            <span className="text-[14px] text-[#7E8CA6]">Total</span>
             <span className="text-[18px] font-bold text-sky-400">{formatCurrency(total)}</span>
           </div>
           <button
@@ -244,31 +244,31 @@ export default function TiendaPage() {
       {/* Pay Modal */}
       {payModal && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0E1521] border border-[#1C2535] rounded-2xl p-6 w-full max-w-sm space-y-4">
-            <h3 className="text-[18px] font-bold text-[#EDF2F7]">Pago — {formatCurrency(total)}</h3>
+          <div className="bg-[#141D2E] border border-[#2A3650] rounded-2xl p-6 w-full max-w-sm space-y-4">
+            <h3 className="text-[18px] font-bold text-[#F3F6FA]">Pago — {formatCurrency(total)}</h3>
             <div>
-              <label className="text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block mb-2">Método de pago</label>
+              <label className="text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block mb-2">Método de pago</label>
               <div className="grid grid-cols-2 gap-2">
                 {['EFECTIVO','TARJETA','TRANSFERENCIA','QR'].map(m => (
                   <button key={m} onClick={() => setPayMethod(m)}
-                    className={`py-2.5 rounded-xl text-[13px] font-medium border transition-colors ${payMethod === m ? 'bg-sky-500/20 border-sky-500/50 text-sky-400' : 'bg-[#141B28] border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]'}`}>
+                    className={`py-2.5 rounded-xl text-[13px] font-medium border transition-colors ${payMethod === m ? 'bg-sky-500/20 border-sky-500/50 text-sky-400' : 'bg-[#1A2333] border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]'}`}>
                     {m}
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block mb-2">Monto recibido</label>
+              <label className="text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block mb-2">Monto recibido</label>
               <input type="number" value={amountPaid} onChange={e => setAmountPaid(e.target.value)}
                 placeholder={String(total)}
-                className="w-full bg-[#141B28] border border-[#1C2535] rounded-xl px-4 py-3 text-[14px] text-[#EDF2F7] outline-none focus:border-sky-500/50" />
+                className="w-full bg-[#1A2333] border border-[#2A3650] rounded-xl px-4 py-3 text-[14px] text-[#F3F6FA] outline-none focus:border-sky-500/50" />
               {Number(amountPaid) >= total && (
                 <p className="text-emerald-400 text-[13px] mt-1">Cambio: {formatCurrency(Number(amountPaid) - total)}</p>
               )}
             </div>
             <div className="flex gap-3">
               <button onClick={handleCancelPay}
-                className="flex-1 py-3 rounded-xl border border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8] text-[14px]">
+                className="flex-1 py-3 rounded-xl border border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7] text-[14px]">
                 Cancelar
               </button>
               <button onClick={() => payOrder.mutate()}

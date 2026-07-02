@@ -8,8 +8,8 @@ import { toast } from 'sonner'
 import { useAuthStore } from '@/store/auth-store'
 import type { AccessEntry, AccessPricing, CashierSession } from '@/lib/types'
 
-const inputCls = 'w-full bg-[#141B28] border border-[#1C2535] rounded-xl px-4 py-2.5 text-[14px] text-[#EDF2F7] placeholder:text-[#2A3A52] outline-none focus:border-sky-500/50'
-const labelCls = 'text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block mb-2'
+const inputCls = 'w-full bg-[#1A2333] border border-[#2A3650] rounded-xl px-4 py-2.5 text-[14px] text-[#F3F6FA] placeholder:text-[#3C4A68] outline-none focus:border-sky-500/50'
+const labelCls = 'text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block mb-2'
 
 export default function AccesoPage() {
   const qc = useQueryClient()
@@ -144,13 +144,13 @@ export default function AccesoPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[24px] font-bold text-[#EDF2F7]">Control de Acceso</h1>
-          <p className="text-[#4A5568] text-sm mt-1">Registro de entradas y salidas del día</p>
+          <h1 className="text-[24px] font-bold text-[#F3F6FA]">Control de Acceso</h1>
+          <p className="text-[#7E8CA6] text-sm mt-1">Registro de entradas y salidas del día</p>
         </div>
         <div className="flex items-center gap-3">
           {canManagePricing && (
             <button onClick={() => setShowPricing(v => !v)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#141B28] border border-[#1C2535] text-[#8B96A8] hover:text-cyan-400 hover:border-cyan-500/30 transition-colors text-[13px]">
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#1A2333] border border-[#2A3650] text-[#A7B3C7] hover:text-cyan-400 hover:border-cyan-500/30 transition-colors text-[13px]">
               <Settings size={15} /> Tarifas
             </button>
           )}
@@ -162,8 +162,8 @@ export default function AccesoPage() {
       </div>
 
       {showPricing && canManagePricing && (
-        <div className="bg-[#101520] border border-cyan-500/20 rounded-2xl p-5">
-          <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4">Tarifas de entrada</h2>
+        <div className="bg-[#121927] border border-cyan-500/20 rounded-2xl p-5">
+          <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4">Tarifas de entrada</h2>
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className={labelCls}>Precio adulto</label>
@@ -182,7 +182,7 @@ export default function AccesoPage() {
             </div>
           </div>
           <div className="flex gap-3 mt-4">
-            <button onClick={() => setShowPricing(false)} className="flex-1 py-2.5 rounded-xl border border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]">Cancelar</button>
+            <button onClick={() => setShowPricing(false)} className="flex-1 py-2.5 rounded-xl border border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]">Cancelar</button>
             <button onClick={() => updatePricing.mutate()} disabled={updatePricing.isPending}
               className="flex-1 py-2.5 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 transition-colors disabled:opacity-40">
               Guardar
@@ -193,8 +193,8 @@ export default function AccesoPage() {
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Form */}
-        <div className="bg-[#101520] border border-[#1C2535] rounded-2xl p-5">
-          <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4 flex items-center gap-2">
+        <div className="bg-[#121927] border border-[#2A3650] rounded-2xl p-5">
+          <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4 flex items-center gap-2">
             <UserPlus size={16} className="text-sky-400" />
             Registrar entrada
           </h2>
@@ -218,30 +218,30 @@ export default function AccesoPage() {
                 <label className={labelCls}>{row.label}</label>
                 <div className="flex items-center gap-3">
                   <button onClick={() => row.set(v => Math.max(row.min, v - 1))}
-                    className="w-10 h-10 rounded-xl bg-[#141B28] border border-[#1C2535] text-[#EDF2F7] font-bold text-xl hover:border-sky-500/40 transition-colors">
+                    className="w-10 h-10 rounded-xl bg-[#1A2333] border border-[#2A3650] text-[#F3F6FA] font-bold text-xl hover:border-sky-500/40 transition-colors">
                     -
                   </button>
-                  <span className="text-[18px] font-bold text-[#EDF2F7] flex-1 text-center">{row.value}</span>
+                  <span className="text-[18px] font-bold text-[#F3F6FA] flex-1 text-center">{row.value}</span>
                   <button onClick={() => row.set(v => v + 1)}
-                    className="w-10 h-10 rounded-xl bg-[#141B28] border border-[#1C2535] text-[#EDF2F7] font-bold text-xl hover:border-sky-500/40 transition-colors">
+                    className="w-10 h-10 rounded-xl bg-[#1A2333] border border-[#2A3650] text-[#F3F6FA] font-bold text-xl hover:border-sky-500/40 transition-colors">
                     +
                   </button>
                 </div>
               </div>
             ))}
 
-            <div className="flex justify-between items-center bg-[#141B28] rounded-xl p-3">
-              <span className="text-[13px] text-[#4A5568]">Total de la entrada</span>
+            <div className="flex justify-between items-center bg-[#1A2333] rounded-xl p-3">
+              <span className="text-[13px] text-[#7E8CA6]">Total de la entrada</span>
               <span className="text-[18px] font-bold text-sky-400">{formatCurrency(total)}</span>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <button onClick={() => setPayNow(true)}
-                className={`py-2.5 rounded-xl text-[12px] font-medium border transition-colors flex items-center justify-center gap-1.5 ${payNow ? 'bg-sky-500/20 border-sky-500/50 text-sky-400' : 'bg-[#141B28] border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]'}`}>
+                className={`py-2.5 rounded-xl text-[12px] font-medium border transition-colors flex items-center justify-center gap-1.5 ${payNow ? 'bg-sky-500/20 border-sky-500/50 text-sky-400' : 'bg-[#1A2333] border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]'}`}>
                 <Wallet size={13} /> Pagar ahora
               </button>
               <button onClick={() => setPayNow(false)}
-                className={`py-2.5 rounded-xl text-[12px] font-medium border transition-colors flex items-center justify-center gap-1.5 ${!payNow ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#141B28] border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]'}`}>
+                className={`py-2.5 rounded-xl text-[12px] font-medium border transition-colors flex items-center justify-center gap-1.5 ${!payNow ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#1A2333] border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]'}`}>
                 <Receipt size={13} /> Dejar cuenta abierta
               </button>
             </div>
@@ -253,7 +253,7 @@ export default function AccesoPage() {
                   <div className="grid grid-cols-2 gap-2">
                     {['EFECTIVO', 'TARJETA', 'TRANSFERENCIA', 'QR'].map(m => (
                       <button key={m} onClick={() => setPayMethod(m)}
-                        className={`py-2 rounded-xl text-[12px] font-medium border transition-colors ${payMethod === m ? 'bg-sky-500/20 border-sky-500/50 text-sky-400' : 'bg-[#141B28] border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]'}`}>
+                        className={`py-2 rounded-xl text-[12px] font-medium border transition-colors ${payMethod === m ? 'bg-sky-500/20 border-sky-500/50 text-sky-400' : 'bg-[#1A2333] border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]'}`}>
                         {m}
                       </button>
                     ))}
@@ -301,13 +301,13 @@ export default function AccesoPage() {
 
         {/* Inside */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-[#101520] border border-[#1C2535] rounded-2xl p-5">
-            <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4 flex items-center gap-2">
+          <div className="bg-[#121927] border border-[#2A3650] rounded-2xl p-5">
+            <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4 flex items-center gap-2">
               <Users size={16} className="text-emerald-400" />
               Dentro ahora ({inside.length})
             </h2>
             {inside.length === 0
-              ? <p className="text-[#4A5568] text-sm text-center py-4">No hay visitantes dentro</p>
+              ? <p className="text-[#7E8CA6] text-sm text-center py-4">No hay visitantes dentro</p>
               : (
                 <div className="space-y-2 max-h-[28rem] overflow-y-auto">
                   {inside.map(e => {
@@ -315,17 +315,17 @@ export default function AccesoPage() {
                     const grandTotal = tab ? tabGrandTotal(tab) : Number(e.totalAmount)
                     const isSettling = settlingId === e.id
                     return (
-                      <div key={e.id} className="bg-[#141B28] rounded-xl p-3">
+                      <div key={e.id} className="bg-[#1A2333] rounded-xl p-3">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-[14px] font-medium text-[#EDF2F7] flex items-center gap-2">
+                            <p className="text-[14px] font-medium text-[#F3F6FA] flex items-center gap-2">
                               {e.visitorName ?? 'Anónimo'}
                               {tab && <span className="text-[10px] bg-amber-500/15 border border-amber-500/30 text-amber-400 rounded-md px-1.5 py-0.5">Cuenta abierta</span>}
                             </p>
                             <div className="flex items-center gap-3 mt-0.5">
                               {e.pax > 1 && <span className="text-[12px] text-sky-400">{e.pax} personas</span>}
                               <span className="text-[12px] text-emerald-400">{formatCurrency(grandTotal)}</span>
-                              <span className="text-[12px] text-[#4A5568] flex items-center gap-1">
+                              <span className="text-[12px] text-[#7E8CA6] flex items-center gap-1">
                                 <Clock size={11} /> {formatTime(e.entryTime)}
                               </span>
                             </div>
@@ -351,24 +351,24 @@ export default function AccesoPage() {
                         </div>
 
                         {tab && (tab.orders?.length ?? 0) > 0 && (
-                          <div className="mt-2 pt-2 border-t border-[#1C2535] space-y-1">
+                          <div className="mt-2 pt-2 border-t border-[#2A3650] space-y-1">
                             {tab.orders!.map(o => (
                               <div key={o.id} className="flex justify-between text-[12px]">
-                                <span className="text-[#4A5568]">
+                                <span className="text-[#7E8CA6]">
                                   {o.items.map(i => `${i.productVariant.product?.name} (${i.productVariant.name}) ×${i.quantity}`).join(', ')}
                                 </span>
-                                <span className="text-[#8B96A8]">{formatCurrency(Number(o.totalAmount))}</span>
+                                <span className="text-[#A7B3C7]">{formatCurrency(Number(o.totalAmount))}</span>
                               </div>
                             ))}
                           </div>
                         )}
 
                         {isSettling && tab && (
-                          <div className="mt-3 pt-3 border-t border-[#1C2535] space-y-3">
+                          <div className="mt-3 pt-3 border-t border-[#2A3650] space-y-3">
                             <div className="grid grid-cols-4 gap-1.5">
                               {['EFECTIVO', 'TARJETA', 'TRANSFERENCIA', 'QR'].map(m => (
                                 <button key={m} onClick={() => setSettleMethod(m)}
-                                  className={`py-1.5 rounded-lg text-[11px] font-medium border transition-colors ${settleMethod === m ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#0C1018] border-[#1C2535] text-[#4A5568]'}`}>
+                                  className={`py-1.5 rounded-lg text-[11px] font-medium border transition-colors ${settleMethod === m ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#0B0F17] border-[#2A3650] text-[#7E8CA6]'}`}>
                                   {m}
                                 </button>
                               ))}
@@ -376,8 +376,8 @@ export default function AccesoPage() {
                             <div className="flex items-center gap-2">
                               <input type="number" value={settleAmountPaid} onChange={ev => setSettleAmountPaid(ev.target.value)}
                                 placeholder={String(grandTotal)}
-                                className="flex-1 bg-[#0C1018] border border-[#1C2535] rounded-lg px-3 py-2 text-[13px] text-[#EDF2F7] outline-none focus:border-amber-500/50" />
-                              <button onClick={() => setSettlingId(null)} className="px-3 py-2 rounded-lg border border-[#1C2535] text-[#4A5568] text-[12px]">Cancelar</button>
+                                className="flex-1 bg-[#0B0F17] border border-[#2A3650] rounded-lg px-3 py-2 text-[13px] text-[#F3F6FA] outline-none focus:border-amber-500/50" />
+                              <button onClick={() => setSettlingId(null)} className="px-3 py-2 rounded-lg border border-[#2A3650] text-[#7E8CA6] text-[12px]">Cancelar</button>
                               <button onClick={() => settleTab.mutate(e.id)}
                                 disabled={!session || !settleAmountPaid || Number(settleAmountPaid) < grandTotal || settleTab.isPending}
                                 className="px-3 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 text-[12px] font-medium disabled:opacity-40">
@@ -398,21 +398,21 @@ export default function AccesoPage() {
             }
           </div>
 
-          <div className="bg-[#101520] border border-[#1C2535] rounded-2xl p-5">
-            <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4 flex items-center gap-2">
-              <RefreshCw size={16} className="text-[#4A5568]" />
+          <div className="bg-[#121927] border border-[#2A3650] rounded-2xl p-5">
+            <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4 flex items-center gap-2">
+              <RefreshCw size={16} className="text-[#7E8CA6]" />
               Salieron hoy ({left.length})
             </h2>
             {left.length === 0
-              ? <p className="text-[#4A5568] text-sm text-center py-4">Ninguno aún</p>
+              ? <p className="text-[#7E8CA6] text-sm text-center py-4">Ninguno aún</p>
               : (
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {left.slice(0, 20).map(e => (
-                    <div key={e.id} className="flex items-center justify-between p-3 bg-[#141B28] rounded-xl opacity-70">
-                      <p className="text-[13px] text-[#8B96A8]">
+                    <div key={e.id} className="flex items-center justify-between p-3 bg-[#1A2333] rounded-xl opacity-70">
+                      <p className="text-[13px] text-[#A7B3C7]">
                         {e.visitorName ?? 'Anónimo'} {e.pax > 1 ? `(${e.pax})` : ''} · {formatCurrency(Number(e.amountPaid ?? e.totalAmount) - Number(e.change || 0))}
                       </p>
-                      <div className="text-[12px] text-[#4A5568] flex gap-2">
+                      <div className="text-[12px] text-[#7E8CA6] flex gap-2">
                         <span>{formatTime(e.entryTime)}</span>
                         <span>→</span>
                         <span>{formatTime(e.exitTime)}</span>

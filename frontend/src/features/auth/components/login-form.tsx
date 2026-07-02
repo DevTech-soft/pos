@@ -46,13 +46,13 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-md">
       {/* Card */}
-      <div className="bg-[#0E1521] border border-[#1C2535] rounded-3xl overflow-hidden shadow-2xl shadow-black/60">
+      <div className="bg-[#141D2E] border border-[#2A3650] rounded-3xl overflow-hidden shadow-2xl shadow-black/60">
         {/* Header */}
         <div
           className="relative px-8 pt-10 pb-8 flex flex-col items-center gap-4 overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, #001520 0%, #0F1520 60%, #0C1018 100%)',
-            borderBottom: '1px solid #1C2535',
+            background: 'linear-gradient(135deg, #001520 0%, #0F1520 60%, #0B0F17 100%)',
+            borderBottom: '1px solid #2A3650',
           }}
         >
           <div
@@ -66,8 +66,8 @@ export function LoginForm() {
             <div className="absolute -inset-1 rounded-2xl border border-sky-500/25" />
           </div>
           <div className="text-center relative">
-            <h1 className="text-[26px] font-bold text-[#EDF2F7] tracking-tight">Pool Manager</h1>
-            <p className="text-[14px] text-[#4A5568] mt-1">Sistema de gestión de piscina</p>
+            <h1 className="text-[26px] font-bold text-[#F3F6FA] tracking-tight">Pool Manager</h1>
+            <p className="text-[14px] text-[#7E8CA6] mt-1">Sistema de gestión de piscina</p>
           </div>
         </div>
 
@@ -76,21 +76,21 @@ export function LoginForm() {
           <form onSubmit={handleSubmit((data) => login.mutate(data))} className="space-y-4">
             {/* Email */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block">
+              <label className="text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block">
                 Correo electrónico
               </label>
               <div className="relative group">
-                <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4A5568] group-focus-within:text-sky-400 transition-colors pointer-events-none" />
+                <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#7E8CA6] group-focus-within:text-sky-400 transition-colors pointer-events-none" />
                 <input
                   {...register('email')}
                   type="email"
                   placeholder="admin@piscina.com"
                   autoComplete="email"
                   className={cn(
-                    'w-full bg-[#141B28] border rounded-xl pl-10 pr-4 py-3.5 text-[14px] text-[#EDF2F7]',
-                    'placeholder:text-[#2A3A52] outline-none transition-all',
+                    'w-full bg-[#1A2333] border rounded-xl pl-10 pr-4 py-3.5 text-[14px] text-[#F3F6FA]',
+                    'placeholder:text-[#3C4A68] outline-none transition-all',
                     'focus:border-sky-500/50 focus:shadow-[0_0_0_3px_rgba(14,165,233,0.08)]',
-                    errors.email ? 'border-rose-500/60' : 'border-[#1C2535]',
+                    errors.email ? 'border-rose-500/60' : 'border-[#2A3650]',
                   )}
                 />
               </div>
@@ -99,25 +99,25 @@ export function LoginForm() {
 
             {/* Password */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block">
+              <label className="text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block">
                 Contraseña
               </label>
               <div className="relative group">
-                <Lock size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4A5568] group-focus-within:text-sky-400 transition-colors pointer-events-none" />
+                <Lock size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#7E8CA6] group-focus-within:text-sky-400 transition-colors pointer-events-none" />
                 <input
                   {...register('password')}
                   type={showPass ? 'text' : 'password'}
                   placeholder="••••••••"
                   autoComplete="current-password"
                   className={cn(
-                    'w-full bg-[#141B28] border rounded-xl pl-10 pr-11 py-3.5 text-[14px] text-[#EDF2F7]',
-                    'placeholder:text-[#2A3A52] outline-none transition-all',
+                    'w-full bg-[#1A2333] border rounded-xl pl-10 pr-11 py-3.5 text-[14px] text-[#F3F6FA]',
+                    'placeholder:text-[#3C4A68] outline-none transition-all',
                     'focus:border-sky-500/50 focus:shadow-[0_0_0_3px_rgba(14,165,233,0.08)]',
-                    errors.password ? 'border-rose-500/60' : 'border-[#1C2535]',
+                    errors.password ? 'border-rose-500/60' : 'border-[#2A3650]',
                   )}
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#4A5568] hover:text-[#8B96A8] transition-colors">
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#7E8CA6] hover:text-[#A7B3C7] transition-colors">
                   {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
@@ -136,27 +136,27 @@ export function LoginForm() {
           </form>
 
           {/* Demo accounts */}
-          <div className="mt-7 pt-6 border-t border-[#1C2535]">
-            <p className="text-[11px] text-[#2A3A52] text-center mb-3 uppercase tracking-[0.15em] font-semibold">
+          <div className="mt-7 pt-6 border-t border-[#2A3650]">
+            <p className="text-[11px] text-[#3C4A68] text-center mb-3 uppercase tracking-[0.15em] font-semibold">
               Cuentas de demostración
             </p>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { rol: 'SuperAdmin', email: 'superadmin@poolmanager.com', password: 'superadmin123', color: 'text-amber-400 border-amber-500/20 hover:border-amber-500/40 hover:bg-amber-500/5' },
-                { rol: 'Admin',      email: 'admin@piscinaelparaiso.com', password: 'admin123',      color: 'text-sky-400 border-sky-500/20 hover:border-sky-500/40 hover:bg-sky-500/5' },
-                { rol: 'Cajero',     email: 'cajero@piscinaelparaiso.com', password: 'cajero123',    color: 'text-emerald-400 border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/5' },
+                { rol: 'SuperAdmin', email: 'superadmin@poolmanager.com', password: 'superadmin123', color: 'text-amber-400 border-amber-500/20 hover:border-amber-500/40 hover:bg-amber-500/10' },
+                { rol: 'Admin',      email: 'admin@piscinaelparaiso.com', password: 'admin123',      color: 'text-sky-400 border-sky-500/20 hover:border-sky-500/40 hover:bg-sky-500/10' },
+                { rol: 'Cajero',     email: 'cajero@piscinaelparaiso.com', password: 'cajero123',    color: 'text-emerald-400 border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/10' },
               ].map((u) => (
                 <button key={u.rol} type="button" onClick={() => fillDemo(u.email, u.password)}
-                  className={cn('bg-[#141B28] border rounded-xl p-3 text-center transition-all', u.color)}>
+                  className={cn('bg-[#1A2333] border rounded-xl p-3 text-center transition-all', u.color)}>
                   <p className="text-[12px] font-bold">{u.rol}</p>
-                  <p className="text-[10px] text-[#2A3A52] mt-1 break-all leading-tight">{u.email.split('@')[0]}</p>
+                  <p className="text-[10px] text-[#3C4A68] mt-1 break-all leading-tight">{u.email.split('@')[0]}</p>
                 </button>
               ))}
             </div>
           </div>
         </div>
       </div>
-      <p className="text-center text-[11px] text-[#2A3A52] mt-5">Pool Manager © 2025 — Sistema de gestión de piscina</p>
+      <p className="text-center text-[11px] text-[#3C4A68] mt-5">Pool Manager © 2025 — Sistema de gestión de piscina</p>
     </div>
   )
 }

@@ -2,8 +2,8 @@
 @import "tailwindcss";
 
 /* ══════════════════════════════════════════════════════════
-   SISTEMA DE DISEÑO — RestoPOS Premium
-   Paleta: Midnight Navy Dark
+   SISTEMA DE DISEÑO — Pool Manager
+   Paleta: Midnight Navy Dark (contraste WCAG AA verificado)
    ══════════════════════════════════════════════════════════ */
 
 @theme {
@@ -12,21 +12,21 @@
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
   /* Superficies (capas de profundidad) */
-  --color-bg-root:      #080C12;
-  --color-bg-sidebar:   #0C1018;
-  --color-bg-card:      #101520;
-  --color-bg-elevated:  #141B28;
-  --color-bg-hover:     #1A2336;
-  --color-bg-active:    #1E2A3D;
+  --color-bg-root:      #070A0F;
+  --color-bg-sidebar:   #0B0F17;
+  --color-bg-card:      #121927;
+  --color-bg-elevated:  #1A2333;
+  --color-bg-hover:     #212C40;
+  --color-bg-active:    #28344A;
 
   /* Bordes */
-  --color-border:        #1C2535;
-  --color-border-strong: #263347;
+  --color-border:        #2A3650;
+  --color-border-strong: #3C4A68;
 
   /* Texto */
-  --color-text-primary:   #EDF2F7;
-  --color-text-secondary: #8B96A8;
-  --color-text-muted:     #4A5568;
+  --color-text-primary:   #F3F6FA;
+  --color-text-secondary: #A7B3C7;
+  --color-text-muted:     #7E8CA6;
 
   /* Acento principal: Amber */
   --color-amber-400: #FBBF24;
@@ -79,8 +79,8 @@ body {
 html {
   font-family: var(--font-sans);
   font-size: 16px;
-  background-color: #080C12;
-  color: #EDF2F7;
+  background-color: #070A0F;
+  color: #F3F6FA;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -90,8 +90,8 @@ body { min-height: 100vh; overflow-x: hidden; }
 /* ── Scrollbar elegante ─────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1C2535; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #263347; }
+::-webkit-scrollbar-thumb { background: #2A3650; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #3C4A68; }
 
 /* ── Tipografía ─────────────────────────────────────────── */
 .tabular-nums { font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
@@ -159,9 +159,9 @@ body { min-height: 100vh; overflow-x: hidden; }
 .skeleton {
   background: linear-gradient(
     90deg,
-    #141B28 25%,
-    #1C2535 50%,
-    #141B28 75%
+    #1A2333 25%,
+    #2A3650 50%,
+    #1A2333 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
@@ -170,15 +170,15 @@ body { min-height: 100vh; overflow-x: hidden; }
 /* ── Status de mesas (rediseño premium) ─────────────────── */
 .mesa-libre {
   border-color: rgba(16, 185, 129, 0.6);
-  background: linear-gradient(135deg, rgba(16,185,129,0.06) 0%, #101520 60%);
+  background: linear-gradient(135deg, rgba(16,185,129,0.06) 0%, #121927 60%);
 }
 .mesa-ocupada {
   border-color: rgba(244, 63, 94, 0.6);
-  background: linear-gradient(135deg, rgba(244,63,94,0.06) 0%, #101520 60%);
+  background: linear-gradient(135deg, rgba(244,63,94,0.06) 0%, #121927 60%);
 }
 .mesa-proceso {
   border-color: rgba(245, 158, 11, 0.6);
-  background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, #101520 60%);
+  background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, #121927 60%);
 }
 
 .mesa-libre:hover {
@@ -196,29 +196,29 @@ body { min-height: 100vh; overflow-x: hidden; }
 
 /* ── Card base ──────────────────────────────────────────── */
 .card {
-  background: #101520;
-  border: 1px solid #1C2535;
+  background: #121927;
+  border: 1px solid #2A3650;
   border-radius: 1rem;
 }
 .card-elevated {
-  background: #141B28;
-  border: 1px solid #1C2535;
+  background: #1A2333;
+  border: 1px solid #2A3650;
   border-radius: 1rem;
 }
 
 /* ── Input base ─────────────────────────────────────────── */
 .input-base {
   width: 100%;
-  background: #141B28;
-  border: 1px solid #1C2535;
+  background: #1A2333;
+  border: 1px solid #2A3650;
   border-radius: 0.75rem;
   padding: 0.625rem 1rem;
   font-size: 0.9375rem;
-  color: #EDF2F7;
+  color: #F3F6FA;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
-.input-base::placeholder { color: #4A5568; }
+.input-base::placeholder { color: #7E8CA6; }
 .input-base:focus {
   border-color: rgba(245,158,11,0.5);
   box-shadow: 0 0 0 3px rgba(245,158,11,0.08);

@@ -32,8 +32,8 @@ export default function DashboardPage() {
     <div className="flex-1 overflow-y-auto p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-[24px] font-bold text-[#EDF2F7]">Dashboard</h1>
-        <p className="text-[#4A5568] text-sm mt-1">
+        <h1 className="text-[24px] font-bold text-[#F3F6FA]">Dashboard</h1>
+        <p className="text-[#7E8CA6] text-sm mt-1">
           {user?.tenant?.name ?? 'Pool Manager'} — {formatDate(new Date().toISOString())}
         </p>
       </div>
@@ -71,7 +71,7 @@ export default function DashboardPage() {
 
       {/* Quick info */}
       {!session && (
-        <div className="bg-[#101520] border border-amber-500/20 rounded-2xl p-5">
+        <div className="bg-[#121927] border border-amber-500/20 rounded-2xl p-5">
           <div className="flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
             <p className="text-amber-400 text-sm font-medium">No hay caja abierta. Ve a la sección Caja para abrir una sesión.</p>
@@ -80,19 +80,19 @@ export default function DashboardPage() {
       )}
 
       {occupancy && occupancy.count > 0 && (
-        <div className="bg-[#101520] border border-[#1C2535] rounded-2xl p-5">
-          <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4 flex items-center gap-2">
+        <div className="bg-[#121927] border border-[#2A3650] rounded-2xl p-5">
+          <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4 flex items-center gap-2">
             <TrendingUp size={16} className="text-sky-400" />
             Visitantes actualmente en la piscina
           </h2>
           <div className="space-y-2">
             {occupancy.entries.slice(0, 10).map((e: any) => (
-              <div key={e.id} className="flex items-center justify-between p-3 bg-[#141B28] rounded-xl">
+              <div key={e.id} className="flex items-center justify-between p-3 bg-[#1A2333] rounded-xl">
                 <div>
-                  <p className="text-[14px] font-medium text-[#EDF2F7]">{e.visitorName ?? 'Visitante anónimo'}</p>
-                  {e.pax > 1 && <p className="text-[12px] text-[#4A5568]">{e.pax} personas</p>}
+                  <p className="text-[14px] font-medium text-[#F3F6FA]">{e.visitorName ?? 'Visitante anónimo'}</p>
+                  {e.pax > 1 && <p className="text-[12px] text-[#7E8CA6]">{e.pax} personas</p>}
                 </div>
-                <p className="text-[12px] text-[#4A5568]">
+                <p className="text-[12px] text-[#7E8CA6]">
                   Entrada: {new Date(e.entryTime).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
@@ -122,15 +122,15 @@ function MetricCard({ icon: Icon, label, value, suffix, color, isCurrency }: {
   const c = colorMap[color] ?? colorMap.sky
 
   return (
-    <div className={`bg-[#101520] border ${c.border} rounded-2xl p-5`}>
+    <div className={`bg-[#121927] border ${c.border} rounded-2xl p-5`}>
       <div className="flex items-start justify-between mb-3">
-        <p className="text-[12px] text-[#4A5568] font-medium">{label}</p>
+        <p className="text-[12px] text-[#7E8CA6] font-medium">{label}</p>
         <div className={`w-8 h-8 rounded-lg ${c.bg} flex items-center justify-center`}>
           <Icon size={15} className={c.text} />
         </div>
       </div>
       <p className={`text-[26px] font-bold ${c.text} leading-none`}>{value}</p>
-      {suffix && <p className="text-[12px] text-[#4A5568] mt-1">{suffix}</p>}
+      {suffix && <p className="text-[12px] text-[#7E8CA6] mt-1">{suffix}</p>}
     </div>
   )
 }

@@ -18,25 +18,25 @@ const TABS: { key: Tab; label: string; icon: React.ElementType }[] = [
   { key: 'compras', label: 'Órdenes de compra', icon: ClipboardList },
 ]
 
-const inputCls = 'w-full bg-[#141B28] border border-[#1C2535] rounded-xl px-4 py-2.5 text-[14px] text-[#EDF2F7] placeholder:text-[#2A3A52] outline-none focus:border-emerald-500/50'
-const labelCls = 'text-[11px] font-bold text-[#4A5568] uppercase tracking-[0.15em] block mb-2'
+const inputCls = 'w-full bg-[#1A2333] border border-[#2A3650] rounded-xl px-4 py-2.5 text-[14px] text-[#F3F6FA] placeholder:text-[#3C4A68] outline-none focus:border-emerald-500/50'
+const labelCls = 'text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block mb-2'
 
 export default function InventarioPage() {
   const [tab, setTab] = useState<Tab>('productos')
 
   return (
     <div className="flex-1 overflow-y-auto p-6 space-y-6">
-      <h1 className="text-[24px] font-bold text-[#EDF2F7] flex items-center gap-3">
+      <h1 className="text-[24px] font-bold text-[#F3F6FA] flex items-center gap-3">
         <Package size={22} className="text-emerald-400" />
         Inventario
       </h1>
 
-      <div className="flex gap-2 border-b border-[#1C2535] pb-px">
+      <div className="flex gap-2 border-b border-[#2A3650] pb-px">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
             className={cn(
               'flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium border-b-2 -mb-px transition-colors',
-              tab === t.key ? 'border-emerald-400 text-emerald-400' : 'border-transparent text-[#4A5568] hover:text-[#8B96A8]',
+              tab === t.key ? 'border-emerald-400 text-emerald-400' : 'border-transparent text-[#7E8CA6] hover:text-[#A7B3C7]',
             )}>
             <t.icon size={15} /> {t.label}
           </button>
@@ -164,8 +164,8 @@ function ProductosPanel() {
       </div>
 
       {showForm && (
-        <div className="bg-[#101520] border border-emerald-500/20 rounded-2xl p-5 space-y-4">
-          <h2 className="text-[16px] font-semibold text-[#EDF2F7]">Nuevo producto</h2>
+        <div className="bg-[#121927] border border-emerald-500/20 rounded-2xl p-5 space-y-4">
+          <h2 className="text-[16px] font-semibold text-[#F3F6FA]">Nuevo producto</h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>Nombre</label>
@@ -189,8 +189,8 @@ function ProductosPanel() {
             </div>
           </div>
 
-          <div className="border-t border-[#1C2535] pt-4">
-            <p className="text-[13px] font-semibold text-[#8B96A8] mb-3">Primera presentación</p>
+          <div className="border-t border-[#2A3650] pt-4">
+            <p className="text-[13px] font-semibold text-[#A7B3C7] mb-3">Primera presentación</p>
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className={labelCls}>Presentación</label>
@@ -231,7 +231,7 @@ function ProductosPanel() {
           </div>
 
           <div className="flex gap-3">
-            <button onClick={() => setShowForm(false)} className="flex-1 py-2.5 rounded-xl border border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]">Cancelar</button>
+            <button onClick={() => setShowForm(false)} className="flex-1 py-2.5 rounded-xl border border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]">Cancelar</button>
             <button
               onClick={() => createProduct.mutate()}
               disabled={!form.name || !form.category || !variant.name || !variant.price || createProduct.isPending}
@@ -242,16 +242,16 @@ function ProductosPanel() {
         </div>
       )}
 
-      {isLoading && <p className="text-[#4A5568] text-center py-8">Cargando productos...</p>}
-      {!isLoading && products.length === 0 && <p className="text-[#4A5568] text-center py-8">No hay productos registrados</p>}
+      {isLoading && <p className="text-[#7E8CA6] text-center py-8">Cargando productos...</p>}
+      {!isLoading && products.length === 0 && <p className="text-[#7E8CA6] text-center py-8">No hay productos registrados</p>}
 
       <div className="space-y-4">
         {products.map(p => (
-          <div key={p.id} className="bg-[#101520] border border-[#1C2535] rounded-2xl p-5">
+          <div key={p.id} className="bg-[#121927] border border-[#2A3650] rounded-2xl p-5">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <p className="text-[15px] font-semibold text-[#EDF2F7]">{p.name}</p>
-                <p className="text-[12px] text-[#4A5568]">{[p.brand, p.category].filter(Boolean).join(' · ')}</p>
+                <p className="text-[15px] font-semibold text-[#F3F6FA]">{p.name}</p>
+                <p className="text-[12px] text-[#7E8CA6]">{[p.brand, p.category].filter(Boolean).join(' · ')}</p>
               </div>
               <button onClick={() => { setAddVariantFor(p.id); setNewVariant(EMPTY_VARIANT) }}
                 className="flex items-center gap-1.5 text-[12px] text-emerald-400 hover:text-emerald-300">
@@ -263,7 +263,7 @@ function ProductosPanel() {
               {p.variants.map(v => (
                 <div key={v.id}>
                   {editingVariant?.id === v.id ? (
-                    <div className="bg-[#141B28] border border-emerald-500/20 rounded-xl p-3 grid grid-cols-3 gap-3">
+                    <div className="bg-[#1A2333] border border-emerald-500/20 rounded-xl p-3 grid grid-cols-3 gap-3">
                       <div><label className={labelCls}>Precio</label>
                         <input type="number" className={inputCls} value={editForm.price} onChange={e => setEditForm(f => ({ ...f, price: e.target.value }))} /></div>
                       <div><label className={labelCls}>Costo</label>
@@ -274,18 +274,18 @@ function ProductosPanel() {
                         <input className={inputCls} value={editForm.purchaseUnit} onChange={e => setEditForm(f => ({ ...f, purchaseUnit: e.target.value }))} /></div>
                       <div><label className={labelCls}>Unidad de venta</label>
                         <input className={inputCls} value={editForm.saleUnit} onChange={e => setEditForm(f => ({ ...f, saleUnit: e.target.value }))} /></div>
-                      <label className="flex items-center gap-2 text-[13px] text-[#8B96A8] mt-6">
+                      <label className="flex items-center gap-2 text-[13px] text-[#A7B3C7] mt-6">
                         <input type="checkbox" checked={editForm.isAvailable} onChange={e => setEditForm(f => ({ ...f, isAvailable: e.target.checked }))} />
                         Disponible para venta
                       </label>
                       <div className="col-span-3 flex gap-2 mt-1">
-                        <button onClick={() => setEditingVariant(null)} className="flex-1 py-2 rounded-lg border border-[#1C2535] text-[#4A5568] text-[13px]">Cancelar</button>
+                        <button onClick={() => setEditingVariant(null)} className="flex-1 py-2 rounded-lg border border-[#2A3650] text-[#7E8CA6] text-[13px]">Cancelar</button>
                         <button onClick={() => updateVariant.mutate()} disabled={updateVariant.isPending}
                           className="flex-1 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-[13px] disabled:opacity-40">Guardar</button>
                       </div>
                     </div>
                   ) : adjustingVariant?.id === v.id ? (
-                    <div className="bg-[#141B28] border border-sky-500/20 rounded-xl p-3 flex items-end gap-3">
+                    <div className="bg-[#1A2333] border border-sky-500/20 rounded-xl p-3 flex items-end gap-3">
                       <div className="flex-1">
                         <label className={labelCls}>Cantidad (+ entra / − sale)</label>
                         <input type="number" className={inputCls} placeholder="ej. 24 o -3" value={adjustForm.quantity}
@@ -296,28 +296,28 @@ function ProductosPanel() {
                         <input className={inputCls} placeholder="Conteo físico / merma" value={adjustForm.reason}
                           onChange={e => setAdjustForm(f => ({ ...f, reason: e.target.value }))} />
                       </div>
-                      <button onClick={() => setAdjustingVariant(null)} className="py-2.5 px-3 rounded-lg border border-[#1C2535] text-[#4A5568] text-[13px]">Cancelar</button>
+                      <button onClick={() => setAdjustingVariant(null)} className="py-2.5 px-3 rounded-lg border border-[#2A3650] text-[#7E8CA6] text-[13px]">Cancelar</button>
                       <button onClick={() => adjustStock.mutate()} disabled={!adjustForm.quantity || !adjustForm.reason || adjustStock.isPending}
                         className="py-2.5 px-3 rounded-lg bg-sky-500/20 border border-sky-500/30 text-sky-400 text-[13px] disabled:opacity-40">Aplicar</button>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-between rounded-xl px-3 py-2.5 bg-[#141B28] border border-[#1C2535]">
+                    <div className="flex items-center justify-between rounded-xl px-3 py-2.5 bg-[#1A2333] border border-[#2A3650]">
                       <div className="min-w-0">
-                        <p className="text-[13px] text-[#EDF2F7] truncate">{v.name}</p>
-                        <p className="text-[11px] text-[#4A5568]">
+                        <p className="text-[13px] text-[#F3F6FA] truncate">{v.name}</p>
+                        <p className="text-[11px] text-[#7E8CA6]">
                           {v.purchaseUnit} → {v.unitsPerPurchase} × {v.saleUnit} · costo {formatCurrency(Number(v.cost))}
                           {!v.isAvailable && <span className="text-amber-400"> · oculto en tienda</span>}
                         </p>
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
-                        <span className={cn('text-[12px] font-medium', v.stock <= 0 ? 'text-rose-400' : 'text-[#8B96A8]')}>{v.stock} {v.saleUnit}</span>
+                        <span className={cn('text-[12px] font-medium', v.stock <= 0 ? 'text-rose-400' : 'text-[#A7B3C7]')}>{v.stock} {v.saleUnit}</span>
                         <span className="text-[13px] font-bold text-emerald-400 w-20 text-right">{formatCurrency(Number(v.price))}</span>
                         <button onClick={() => { setAdjustingVariant(v); setAdjustForm({ quantity: '', reason: '' }) }}
-                          className="w-7 h-7 rounded-lg bg-[#1C2535] text-[#8B96A8] hover:text-sky-400 flex items-center justify-center" title="Ajustar stock">
+                          className="w-7 h-7 rounded-lg bg-[#2A3650] text-[#A7B3C7] hover:text-sky-400 flex items-center justify-center" title="Ajustar stock">
                           <PackagePlus size={13} />
                         </button>
                         <button onClick={() => openEdit(v)}
-                          className="w-7 h-7 rounded-lg bg-[#1C2535] text-[#8B96A8] hover:text-emerald-400 flex items-center justify-center" title="Editar">
+                          className="w-7 h-7 rounded-lg bg-[#2A3650] text-[#A7B3C7] hover:text-emerald-400 flex items-center justify-center" title="Editar">
                           <Pencil size={13} />
                         </button>
                       </div>
@@ -327,7 +327,7 @@ function ProductosPanel() {
               ))}
 
               {addVariantFor === p.id && (
-                <div className="bg-[#141B28] border border-emerald-500/20 rounded-xl p-3 grid grid-cols-3 gap-3">
+                <div className="bg-[#1A2333] border border-emerald-500/20 rounded-xl p-3 grid grid-cols-3 gap-3">
                   <div><label className={labelCls}>Presentación</label>
                     <input className={inputCls} placeholder="1.5L" value={newVariant.name} onChange={e => setNewVariant(v => ({ ...v, name: e.target.value }))} /></div>
                   <div><label className={labelCls}>Precio</label>
@@ -343,7 +343,7 @@ function ProductosPanel() {
                   <div><label className={labelCls}>Stock inicial</label>
                     <input type="number" className={inputCls} value={newVariant.stock} onChange={e => setNewVariant(v => ({ ...v, stock: e.target.value }))} /></div>
                   <div className="col-span-3 flex gap-2">
-                    <button onClick={() => setAddVariantFor(null)} className="flex-1 py-2 rounded-lg border border-[#1C2535] text-[#4A5568] text-[13px]">Cancelar</button>
+                    <button onClick={() => setAddVariantFor(null)} className="flex-1 py-2 rounded-lg border border-[#2A3650] text-[#7E8CA6] text-[13px]">Cancelar</button>
                     <button onClick={() => addVariant.mutate(p.id)} disabled={!newVariant.name || !newVariant.price || addVariant.isPending}
                       className="flex-1 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-[13px] disabled:opacity-40">Guardar</button>
                   </div>
@@ -396,8 +396,8 @@ function ProveedoresPanel() {
       </div>
 
       {showForm && (
-        <div className="bg-[#101520] border border-emerald-500/20 rounded-2xl p-5">
-          <h2 className="text-[16px] font-semibold text-[#EDF2F7] mb-4">Nuevo proveedor</h2>
+        <div className="bg-[#121927] border border-emerald-500/20 rounded-2xl p-5">
+          <h2 className="text-[16px] font-semibold text-[#F3F6FA] mb-4">Nuevo proveedor</h2>
           <div className="grid grid-cols-2 gap-4">
             {[
               { key: 'name', label: 'Nombre / Razón social', placeholder: 'Distribuidora XYZ' },
@@ -415,7 +415,7 @@ function ProveedoresPanel() {
             ))}
           </div>
           <div className="flex gap-3 mt-4">
-            <button onClick={() => setShowForm(false)} className="flex-1 py-2.5 rounded-xl border border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]">Cancelar</button>
+            <button onClick={() => setShowForm(false)} className="flex-1 py-2.5 rounded-xl border border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]">Cancelar</button>
             <button onClick={() => create.mutate()} disabled={!form.name || create.isPending}
               className="flex-1 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-40">
               Guardar
@@ -424,23 +424,23 @@ function ProveedoresPanel() {
         </div>
       )}
 
-      {isLoading && <p className="text-[#4A5568] text-center py-8">Cargando proveedores...</p>}
-      {!isLoading && suppliers.length === 0 && <p className="text-[#4A5568] text-center py-8">No hay proveedores registrados</p>}
+      {isLoading && <p className="text-[#7E8CA6] text-center py-8">Cargando proveedores...</p>}
+      {!isLoading && suppliers.length === 0 && <p className="text-[#7E8CA6] text-center py-8">No hay proveedores registrados</p>}
 
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {suppliers.map(s => (
-          <div key={s.id} className={cn('bg-[#101520] border rounded-2xl p-5', s.isActive ? 'border-[#1C2535]' : 'border-[#1C2535] opacity-50')}>
+          <div key={s.id} className={cn('bg-[#121927] border rounded-2xl p-5', s.isActive ? 'border-[#2A3650]' : 'border-[#2A3650] opacity-50')}>
             <div className="flex items-start justify-between mb-2">
-              <p className="text-[15px] font-semibold text-[#EDF2F7]">{s.name}</p>
+              <p className="text-[15px] font-semibold text-[#F3F6FA]">{s.name}</p>
               <button onClick={() => toggleActive.mutate({ id: s.id, isActive: !s.isActive })}
                 title={s.isActive ? 'Desactivar' : 'Reactivar'}
-                className={s.isActive ? 'text-emerald-400' : 'text-[#4A5568]'}>
+                className={s.isActive ? 'text-emerald-400' : 'text-[#7E8CA6]'}>
                 {s.isActive ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
               </button>
             </div>
-            {s.contactName && <p className="text-[12px] text-[#8B96A8]">{s.contactName}</p>}
-            {s.phone && <p className="text-[12px] text-[#4A5568]">{s.phone}</p>}
-            {s.email && <p className="text-[12px] text-[#4A5568]">{s.email}</p>}
+            {s.contactName && <p className="text-[12px] text-[#A7B3C7]">{s.contactName}</p>}
+            {s.phone && <p className="text-[12px] text-[#7E8CA6]">{s.phone}</p>}
+            {s.email && <p className="text-[12px] text-[#7E8CA6]">{s.email}</p>}
           </div>
         ))}
       </div>
@@ -538,8 +538,8 @@ function ComprasPanel() {
       </div>
 
       {showForm && (
-        <div className="bg-[#101520] border border-emerald-500/20 rounded-2xl p-5 space-y-4">
-          <h2 className="text-[16px] font-semibold text-[#EDF2F7]">Nueva orden de compra</h2>
+        <div className="bg-[#121927] border border-emerald-500/20 rounded-2xl p-5 space-y-4">
+          <h2 className="text-[16px] font-semibold text-[#F3F6FA]">Nueva orden de compra</h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>Proveedor</label>
@@ -555,7 +555,7 @@ function ComprasPanel() {
           </div>
 
           <div className="space-y-2">
-            <p className="text-[13px] font-semibold text-[#8B96A8]">Ítems</p>
+            <p className="text-[13px] font-semibold text-[#A7B3C7]">Ítems</p>
             {items.map((item, idx) => (
               <div key={idx} className="flex items-end gap-2">
                 <div className="flex-[2]">
@@ -574,7 +574,7 @@ function ComprasPanel() {
                   <input type="number" className={inputCls} value={item.unitCost} onChange={e => updateItem(idx, { unitCost: e.target.value })} />
                 </div>
                 <button onClick={() => setItems(prev => prev.filter((_, i) => i !== idx))} disabled={items.length === 1}
-                  className="w-9 h-9 rounded-lg bg-[#1C2535] text-[#8B96A8] hover:text-rose-400 flex items-center justify-center disabled:opacity-30 mb-0.5">
+                  className="w-9 h-9 rounded-lg bg-[#2A3650] text-[#A7B3C7] hover:text-rose-400 flex items-center justify-center disabled:opacity-30 mb-0.5">
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -585,13 +585,13 @@ function ComprasPanel() {
             </button>
           </div>
 
-          <div className="flex justify-between items-center border-t border-[#1C2535] pt-3">
-            <span className="text-[13px] text-[#4A5568]">Total</span>
+          <div className="flex justify-between items-center border-t border-[#2A3650] pt-3">
+            <span className="text-[13px] text-[#7E8CA6]">Total</span>
             <span className="text-[16px] font-bold text-emerald-400">{formatCurrency(formTotal)}</span>
           </div>
 
           <div className="flex gap-3">
-            <button onClick={() => { setShowForm(false); resetForm() }} className="flex-1 py-2.5 rounded-xl border border-[#1C2535] text-[#4A5568] hover:text-[#8B96A8]">Cancelar</button>
+            <button onClick={() => { setShowForm(false); resetForm() }} className="flex-1 py-2.5 rounded-xl border border-[#2A3650] text-[#7E8CA6] hover:text-[#A7B3C7]">Cancelar</button>
             <button onClick={() => create.mutate()} disabled={!canSubmit || create.isPending}
               className="flex-1 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-40">
               Crear orden
@@ -600,18 +600,18 @@ function ComprasPanel() {
         </div>
       )}
 
-      {isLoading && <p className="text-[#4A5568] text-center py-8">Cargando órdenes...</p>}
-      {!isLoading && orders.length === 0 && <p className="text-[#4A5568] text-center py-8">No hay órdenes de compra registradas</p>}
+      {isLoading && <p className="text-[#7E8CA6] text-center py-8">Cargando órdenes...</p>}
+      {!isLoading && orders.length === 0 && <p className="text-[#7E8CA6] text-center py-8">No hay órdenes de compra registradas</p>}
 
       <div className="space-y-3">
         {orders.map(o => (
-          <div key={o.id} className="bg-[#101520] border border-[#1C2535] rounded-2xl overflow-hidden">
+          <div key={o.id} className="bg-[#121927] border border-[#2A3650] rounded-2xl overflow-hidden">
             <button onClick={() => setExpanded(expanded === o.id ? null : o.id)} className="w-full flex items-center justify-between p-5 text-left">
               <div className="flex items-center gap-3">
-                {expanded === o.id ? <ChevronDown size={16} className="text-[#4A5568]" /> : <ChevronRight size={16} className="text-[#4A5568]" />}
+                {expanded === o.id ? <ChevronDown size={16} className="text-[#7E8CA6]" /> : <ChevronRight size={16} className="text-[#7E8CA6]" />}
                 <div>
-                  <p className="text-[14px] font-semibold text-[#EDF2F7]">{o.supplier.name}</p>
-                  <p className="text-[12px] text-[#4A5568]">{formatDateTime(o.orderDate)}</p>
+                  <p className="text-[14px] font-semibold text-[#F3F6FA]">{o.supplier.name}</p>
+                  <p className="text-[12px] text-[#7E8CA6]">{formatDateTime(o.orderDate)}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -625,15 +625,15 @@ function ComprasPanel() {
                 <div className="space-y-1.5">
                   {o.items.map(item => (
                     <div key={item.id} className="flex justify-between text-[13px]">
-                      <span className="text-[#4A5568]">
+                      <span className="text-[#7E8CA6]">
                         {item.productVariant.product?.name} ({item.productVariant.name}) × {item.quantity} {item.productVariant.purchaseUnit}
                       </span>
-                      <span className="text-[#8B96A8]">{formatCurrency(Number(item.subtotal))}</span>
+                      <span className="text-[#A7B3C7]">{formatCurrency(Number(item.subtotal))}</span>
                     </div>
                   ))}
                 </div>
                 {o.status === 'PENDIENTE' && (
-                  <div className="flex gap-3 pt-2 border-t border-[#1C2535]">
+                  <div className="flex gap-3 pt-2 border-t border-[#2A3650]">
                     <button onClick={() => cancel.mutate(o.id)} disabled={cancel.isPending}
                       className="flex-1 py-2.5 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-[13px] font-medium disabled:opacity-40">
                       Cancelar orden
