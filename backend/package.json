@@ -6,6 +6,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "postinstall": "prisma generate",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -20,6 +21,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:seed": "ts-node prisma/seed.ts",
+    "create:superadmin": "ts-node prisma/create-superadmin.ts",
+    "reset:local-data": "ts-node prisma/reset-local-data.ts",
     "env:local": "node -e \"require('fs').copyFileSync('.env.local', '.env')\" && echo .env actualizado a LOCAL",
     "env:prod": "node -e \"require('fs').copyFileSync('.env.prod', '.env')\" && echo .env actualizado a PRODUCCION",
     "dev:local": "npm run env:local && npm run start:dev"
