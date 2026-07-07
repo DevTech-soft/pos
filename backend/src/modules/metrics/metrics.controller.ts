@@ -12,7 +12,7 @@ import { Role } from '@prisma/client';
 
 @Controller('metrics')
 @UseGuards(JwtAuthGuard, TenantGuard, RolesGuard)
-@Roles(Role.ADMIN, Role.SUPERADMIN)
+@Roles(Role.ADMIN)
 export class MetricsController {
   constructor(private metricsService: MetricsService) {}
 

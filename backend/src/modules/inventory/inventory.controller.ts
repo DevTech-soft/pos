@@ -13,7 +13,7 @@ import { Role } from '@prisma/client';
 
 @Controller('inventory')
 @UseGuards(JwtAuthGuard, TenantGuard, RolesGuard)
-@Roles(Role.ADMIN, Role.SUPERADMIN)
+@Roles(Role.ADMIN)
 export class InventoryController {
   constructor(private inventoryService: InventoryService) {}
 

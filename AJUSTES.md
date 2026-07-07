@@ -241,3 +241,35 @@ Reglas adoptadas:
   muestra su rol y estado, con botones "Resetear" y activar/desactivar; sin
   acceso, muestra botón "Dar acceso al sistema".
 - Sidebar: `EMPLEADO` ahora ve los mismos módulos que `CAJERO`.
+
+## 2026-07-06 — Dashboard del superadmin: solo piscinas, nada de operación de tenant
+
+Problema: el superadmin (rol sin `tenantId`, es el dueño del negocio revisando
+las piscinas que administra) veía en el menú Inventario, Métricas, Empleados y
+Nómina — módulos que pertenecen a una piscina concreta. Como el superadmin no
+tiene tenant propio, esas pantallas le salían vacías o rotas; no tienen ningún
+sentido para su rol, que es solo dar de alta y supervisar piscinas.
+
+Reglas adoptadas:
+
+1. El menú del superadmin queda reducido a **Dashboard** y **Piscinas**.
+2. El **Dashboard del superadmin** es una vista de solo lectura con el estado
+   de las piscinas del sistema: tarjetas con el total, activas e inactivas, y
+   una lista con cada piscina (admin asignado, empleados registrados, fecha de
+   alta, badge activa/inactiva). Crear piscinas, editar su admin o
+   activar/desactivarlas se sigue haciendo desde `/tenants` (el Dashboard no
+   duplica esa gestión, solo el resumen).
+3. Endurecimiento a nivel de API, en la misma línea que el hueco de seguridad
+   cerrado el 2026-07-06 en `/users`: `SUPERADMIN` ya no está en `@Roles` de
+   `/inventory`, `/metrics`, `/employees` ni `/payroll` — quedan solo para
+   `ADMIN`. Antes el rol figuraba ahí pero fallaba igual en tiempo de
+   ejecución (esos servicios exigen un `tenantId` de tenant que el superadmin
+   no tiene), así que restringirlo no le quita ninguna capacidad real.
+
+### UI
+
+- Sidebar: `Inventario`, `Métricas`, `Empleados` y `Nómina` ya no aparecen
+  para `SUPERADMIN` (antes sí, sin ser funcionales).
+- Dashboard (`/dashboard`): ahora bifurca por rol — `SUPERADMIN` ve el resumen
+  de piscinas descrito arriba; el resto de roles sigue viendo el dashboard
+  operativo de siempre (aforo, caja, entradas del día).

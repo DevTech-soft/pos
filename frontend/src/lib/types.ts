@@ -18,6 +18,7 @@ export interface Tenant {
   createdAt: string
   /** Admin(es) de la piscina — viene de GET /tenants (filtrado a role=ADMIN) y GET /tenants/:id (todos los roles) */
   users?: { id: string; name: string; email: string; role?: Role; isActive: boolean }[]
+  _count?: { users: number; employees: number }
 }
 
 export interface User {

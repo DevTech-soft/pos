@@ -10,7 +10,7 @@ import { Role } from '@prisma/client';
 
 @Controller('employees')
 @UseGuards(JwtAuthGuard, TenantGuard, RolesGuard)
-@Roles(Role.ADMIN, Role.SUPERADMIN)
+@Roles(Role.ADMIN)
 export class EmployeesController {
   constructor(private employeesService: EmployeesService) {}
 
