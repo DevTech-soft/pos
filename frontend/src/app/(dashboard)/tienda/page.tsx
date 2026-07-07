@@ -1,23 +1,43 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api, getAxiosErrorMessage } from '@/lib/api-client'
 import { formatCurrency } from '@/lib/utils'
-import { ShoppingCart, Plus, Minus, Trash2, CreditCard, Receipt } from 'lucide-react'
+import { ShoppingCart, Plus, Minus, Trash2, CreditCard, Receipt, Search, X } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Product, ProductVariant, CashierSession, AccessEntry, Rental } from '@/lib/types'
 
 interface CartItem { variant: ProductVariant; productName: string; quantity: number }
 
+// Normaliza acentos/mayúsculas para que "gaseosa" encuentre "Gaseósa" y viceversa.
+function normalize(s: string): string {
+  return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+}
+
 export default function TiendaPage() {
   const qc = useQueryClient()
   const [cart, setCart] = useState<CartItem[]>([])
+  const [search, setSearch] = useState('')
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const [payModal, setPayModal] = useState(false)
   const [payMethod, setPayMethod] = useState<string>('EFECTIVO')
   const [amountPaid, setAmountPaid] = useState('')
   const [orderId, setOrderId] = useState<string | null>(null)
   // '' = cobrar ahora, 'entry:<id>' = cargar a cuenta de entrada, 'rental:<id>' = cargar a cuenta de alquiler
   const [chargeTarget, setChargeTarget] = useState('')
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== '/') return
+      const target = e.target as HTMLElement
+      const isTyping = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT'
+      if (isTyping) return
+      e.preventDefault()
+      searchInputRef.current?.focus()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
 
   const { data: products = [] } = useQuery({
     queryKey: ['store-products'],
@@ -115,52 +135,98 @@ export default function TiendaPage() {
   }
 
   const categories = [...new Set(products.map(p => p.category))]
+
+  const query = normalize(search.trim())
+  const isSearching = query.length > 0
+  const filteredProducts = isSearching
+    ? products
+        .map(p => {
+          const productMatch = normalize(p.name).includes(query) || (p.brand ? normalize(p.brand).includes(query) : false)
+          const variants = productMatch ? p.variants : p.variants.filter(v => normalize(v.name).includes(query))
+          return { ...p, variants }
+        })
+        .filter(p => p.variants.length > 0)
+    : []
+
   const selectedEntry = targetKind === 'entry' ? openTabs.find(t => t.id === targetId) : undefined
   const selectedRental = targetKind === 'rental' ? openRentalTabs.find(t => t.id === targetId) : undefined
   const selectedLabel = selectedEntry?.visitorName ?? selectedRental?.customerName ?? 'Anónimo'
+
+  const renderProductCard = (p: Product) => (
+    <div key={p.id} className="bg-[#121927] border border-[#2A3650] rounded-2xl p-4">
+      <p className="text-[14px] font-medium text-[#F3F6FA]">{p.name}</p>
+      {p.brand && <p className="text-[11px] text-[#7E8CA6] mt-0.5">{p.brand}</p>}
+      <div className="mt-3 space-y-1.5">
+        {p.variants.map(v => {
+          const inCartQty = cartQuantity(v.id)
+          const outOfStock = v.stock - inCartQty <= 0
+          return (
+            <button
+              key={v.id}
+              onClick={() => addToCart(p, v)}
+              disabled={outOfStock}
+              className="w-full flex items-center justify-between rounded-xl px-3 py-2 bg-[#1A2333] border border-[#2A3650] hover:border-sky-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors group"
+            >
+              <span className="text-[12px] text-[#A7B3C7] group-hover:text-sky-400 transition-colors truncate">{v.name}</span>
+              <span className="flex items-center gap-2 flex-shrink-0">
+                <span className={`text-[10px] ${outOfStock ? 'text-rose-400' : 'text-[#7E8CA6]'}`}>
+                  {outOfStock ? 'Sin stock' : `${v.stock - inCartQty} disp.`}
+                </span>
+                <span className="text-[13px] font-bold text-sky-400">{formatCurrency(Number(v.price))}</span>
+              </span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
 
   return (
     <div className="flex h-full">
       {/* Products */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         <h1 className="text-[24px] font-bold text-[#F3F6FA]">Tienda</h1>
-        {categories.map(cat => (
-          <div key={cat}>
-            <h2 className="text-[13px] font-semibold text-[#7E8CA6] uppercase tracking-[0.15em] mb-3">{cat}</h2>
+
+        <div className="relative">
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#7E8CA6] pointer-events-none" />
+          <input
+            ref={searchInputRef}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder='Buscar producto, marca o presentación... ("/" para enfocar)'
+            className="w-full bg-[#121927] border border-[#2A3650] rounded-xl pl-10 pr-10 py-2.5 text-[14px] text-[#F3F6FA] placeholder:text-[#3C4A68] outline-none focus:border-sky-500/50"
+          />
+          {search && (
+            <button onClick={() => setSearch('')} title="Limpiar búsqueda"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7E8CA6] hover:text-[#A7B3C7]">
+              <X size={15} />
+            </button>
+          )}
+        </div>
+
+        {isSearching ? (
+          <div>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-              {products.filter(p => p.category === cat).map(p => (
-                <div key={p.id} className="bg-[#121927] border border-[#2A3650] rounded-2xl p-4">
-                  <p className="text-[14px] font-medium text-[#F3F6FA]">{p.name}</p>
-                  {p.brand && <p className="text-[11px] text-[#7E8CA6] mt-0.5">{p.brand}</p>}
-                  <div className="mt-3 space-y-1.5">
-                    {p.variants.map(v => {
-                      const inCartQty = cartQuantity(v.id)
-                      const outOfStock = v.stock - inCartQty <= 0
-                      return (
-                        <button
-                          key={v.id}
-                          onClick={() => addToCart(p, v)}
-                          disabled={outOfStock}
-                          className="w-full flex items-center justify-between rounded-xl px-3 py-2 bg-[#1A2333] border border-[#2A3650] hover:border-sky-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors group"
-                        >
-                          <span className="text-[12px] text-[#A7B3C7] group-hover:text-sky-400 transition-colors truncate">{v.name}</span>
-                          <span className="flex items-center gap-2 flex-shrink-0">
-                            <span className={`text-[10px] ${outOfStock ? 'text-rose-400' : 'text-[#7E8CA6]'}`}>
-                              {outOfStock ? 'Sin stock' : `${v.stock - inCartQty} disp.`}
-                            </span>
-                            <span className="text-[13px] font-bold text-sky-400">{formatCurrency(Number(v.price))}</span>
-                          </span>
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
-              ))}
+              {filteredProducts.map(renderProductCard)}
             </div>
+            {filteredProducts.length === 0 && (
+              <p className="text-[#7E8CA6] text-center py-8">Sin resultados para &quot;{search}&quot;</p>
+            )}
           </div>
-        ))}
-        {products.length === 0 && (
-          <p className="text-[#7E8CA6] text-center py-8">No hay productos disponibles para la venta</p>
+        ) : (
+          <>
+            {categories.map(cat => (
+              <div key={cat}>
+                <h2 className="text-[13px] font-semibold text-[#7E8CA6] uppercase tracking-[0.15em] mb-3">{cat}</h2>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                  {products.filter(p => p.category === cat).map(renderProductCard)}
+                </div>
+              </div>
+            ))}
+            {products.length === 0 && (
+              <p className="text-[#7E8CA6] text-center py-8">No hay productos disponibles para la venta</p>
+            )}
+          </>
         )}
       </div>
 
