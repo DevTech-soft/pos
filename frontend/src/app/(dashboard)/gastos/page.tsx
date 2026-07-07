@@ -6,7 +6,8 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { Receipt, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 
-const CATEGORIES = ['SERVICIOS','NOMINA','MANTENIMIENTO','SUMINISTROS','OTRO','COBRO_DEUDA','PRESTAMO_RECIBIDO','OTRO_INGRESO']
+const EXPENSE_CATEGORIES = ['SERVICIOS', 'NOMINA', 'MANTENIMIENTO', 'SUMINISTROS', 'OTRO']
+const INCOME_CATEGORIES = ['COBRO_DEUDA', 'PRESTAMO_RECIBIDO', 'OTRO_INGRESO']
 
 export default function GastosPage() {
   const qc = useQueryClient()
@@ -48,18 +49,22 @@ export default function GastosPage() {
         <div className="bg-[#121927] border border-rose-500/20 rounded-2xl p-5">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block mb-2">Categoría</label>
-              <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
-                className="w-full bg-[#1A2333] border border-[#2A3650] rounded-xl px-4 py-2.5 text-[14px] text-[#F3F6FA] outline-none">
-                {CATEGORIES.map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
-            <div>
               <label className="text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block mb-2">Tipo</label>
-              <select value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value }))}
+              <select value={form.type} onChange={e => {
+                const type = e.target.value
+                const categories = type === 'EGRESO' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES
+                setForm(p => ({ ...p, type, category: categories[0] }))
+              }}
                 className="w-full bg-[#1A2333] border border-[#2A3650] rounded-xl px-4 py-2.5 text-[14px] text-[#F3F6FA] outline-none">
                 <option value="EGRESO">Egreso</option>
                 <option value="INGRESO">Ingreso</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-[11px] font-bold text-[#7E8CA6] uppercase tracking-[0.15em] block mb-2">Categoría</label>
+              <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
+                className="w-full bg-[#1A2333] border border-[#2A3650] rounded-xl px-4 py-2.5 text-[14px] text-[#F3F6FA] outline-none">
+                {(form.type === 'EGRESO' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES).map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div className="col-span-2">

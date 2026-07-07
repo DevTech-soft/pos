@@ -1,8 +1,15 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { GeneralExpenseCategory, PaymentMethod } from '@prisma/client';
+import { GeneralExpenseCategory, PaymentMethod, GeneralExpense } from '@prisma/client';
 
-const INCOME_EXPENSE_CATEGORIES: GeneralExpenseCategory[] = ['COBRO_DEUDA', 'PRESTAMO_RECIBIDO', 'OTRO_INGRESO'];
+// La clasificación ingreso/egreso de un movimiento general la decide el campo
+// `type` que elige el usuario en el formulario (igual que en /gastos), no la
+// `category` — la categoría es solo una etiqueta/motivo. Antes se usaba una
+// lista fija de categorías "de ingreso", así que un movimiento marcado como
+// Ingreso con una categoría de gasto (ej. "Otro") se contaba como egreso.
+function isIncome(expense: Pick<GeneralExpense, 'type'>): boolean {
+  return expense.type !== 'EGRESO';
+}
 
 const EXPENSE_CATEGORY_LABELS: Record<GeneralExpenseCategory, string> = {
   SERVICIOS: 'Servicios',
@@ -130,12 +137,12 @@ export class MetricsService {
     const entradas = data.accessEntries.reduce((acc, e) => acc + Number(e.totalAmount), 0);
     const alquiler = data.rentals.reduce((acc, r) => acc + Number(r.totalAmount), 0);
     const otrosIngresos = data.generalExpenses
-      .filter(g => INCOME_EXPENSE_CATEGORIES.includes(g.category))
+      .filter(isIncome)
       .reduce((acc, g) => acc + Number(g.amount), 0);
     const totalIngresos = tienda + entradas + alquiler + otrosIngresos;
 
     const generales = data.generalExpenses
-      .filter(g => !INCOME_EXPENSE_CATEGORIES.includes(g.category))
+      .filter(g => !isIncome(g))
       .reduce((acc, g) => acc + Number(g.amount), 0);
     const caja = data.cashExpenses.reduce((acc, c) => acc + Number(c.totalAmount), 0);
     const nomina = data.payrollEntries.reduce((acc, p) => acc + Number(p.total), 0);
@@ -178,7 +185,7 @@ export class MetricsService {
     data.accessEntries.forEach(e => addIngreso(e.effectiveDate, Number(e.totalAmount)));
     data.rentals.forEach(r => addIngreso(r.paidAt!, Number(r.totalAmount)));
     data.generalExpenses.forEach(g => {
-      if (INCOME_EXPENSE_CATEGORIES.includes(g.category)) addIngreso(g.date, Number(g.amount));
+      if (isIncome(g)) addIngreso(g.date, Number(g.amount));
       else addEgreso(g.date, Number(g.amount));
     });
     data.cashExpenses.forEach(c => addEgreso(c.createdAt, Number(c.totalAmount)));
@@ -220,7 +227,7 @@ export class MetricsService {
     const add = (label: string, amount: number) => totals.set(label, (totals.get(label) ?? 0) + amount);
 
     data.generalExpenses
-      .filter(g => !INCOME_EXPENSE_CATEGORIES.includes(g.category))
+      .filter(g => !isIncome(g))
       .forEach(g => add(EXPENSE_CATEGORY_LABELS[g.category], Number(g.amount)));
     const cajaTotal = data.cashExpenses.reduce((acc, c) => acc + Number(c.totalAmount), 0);
     if (cajaTotal > 0) add('Gastos de caja', cajaTotal);
