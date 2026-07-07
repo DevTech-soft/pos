@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEmail, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsEmail, IsBoolean, MinLength } from 'class-validator';
 
 export class CreateTenantDto {
   @IsString()
@@ -15,6 +15,17 @@ export class CreateTenantDto {
   @IsOptional()
   @IsEmail()
   email?: string;
+
+  // Admin de la piscina, creado junto con el tenant
+  @IsString()
+  adminName: string;
+
+  @IsEmail()
+  adminEmail: string;
+
+  @IsString()
+  @MinLength(6)
+  adminPassword: string;
 }
 
 export class UpdateTenantDto {

@@ -124,6 +124,7 @@ model User {
   sessions        CashierSession[]
   generalExpenses GeneralExpense[]
   purchaseOrders  PurchaseOrder[]
+  employee        Employee?
 
   @@index([email])
   @@index([tenantId])
@@ -398,6 +399,7 @@ model CashExpense {
 model Employee {
   id           String   @id @default(cuid())
   tenantId     String
+  userId       String?  @unique
   name         String
   role         String
   baseSalary   Decimal  @db.Decimal(12, 2)
@@ -410,6 +412,7 @@ model Employee {
   updatedAt    DateTime @updatedAt
 
   tenant        Tenant         @relation(fields: [tenantId], references: [id])
+  user          User?          @relation(fields: [userId], references: [id])
   payrollEntries PayrollEntry[]
 
   @@index([tenantId])

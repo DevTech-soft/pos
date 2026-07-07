@@ -21,18 +21,20 @@ export class UsersController {
 
   @Get(':id')
   @Roles(Role.SUPERADMIN, Role.ADMIN)
-  findOne(@Param('id') id: string) { return this.usersService.findOne(id); }
+  findOne(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.usersService.findOne(id, user.role === Role.SUPERADMIN ? undefined : user);
+  }
 
   @Post()
   @Roles(Role.SUPERADMIN, Role.ADMIN)
   create(@Body() dto: CreateUserDto, @CurrentUser() user: any) {
     if (user.role !== Role.SUPERADMIN) dto.tenantId = user.tenantId;
-    return this.usersService.create(dto);
+    return this.usersService.create(dto, user.role === Role.SUPERADMIN ? undefined : user);
   }
 
   @Patch(':id')
   @Roles(Role.SUPERADMIN, Role.ADMIN)
-  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    return this.usersService.update(id, dto);
+  update(@Param('id') id: string, @Body() dto: UpdateUserDto, @CurrentUser() user: any) {
+    return this.usersService.update(id, dto, user.role === Role.SUPERADMIN ? undefined : user);
   }
 }

@@ -174,3 +174,70 @@ Reglas adoptadas (paralelas a las de Control de Acceso):
 - Cuaderno de ventas (`/ventas`): combina `/store/sales` + `/access/sales` +
   `/rentals/sales`; los pedidos ya cargados a una entrada o alquiler se
   excluyen de `/store/sales` en esta vista para no duplicarlos.
+
+## 2026-07-06 — Login para el admin de cada piscina y para empleados con acceso
+
+Problema: crear una piscina (`Tenant`) no creaba su usuario admin — el
+superadmin no tenía forma, desde la UI, de darle usuario/contraseña al admin
+de una piscina nueva ni de editárselo después. Y crear un empleado
+(`Employee`, ficha de RRHH) no le daba ningún acceso al sistema — no existía
+vínculo entre `Employee` y `User`.
+
+Reglas adoptadas:
+
+1. **Crear una piscina crea su admin en el mismo paso.** El superadmin llena
+   nombre/email/contraseña del admin junto con los datos de la piscina; se
+   crean `Tenant` + `User` (`role: ADMIN`) en una sola transacción.
+2. **El superadmin solo gestiona el admin de cada piscina** (nombre, email,
+   contraseña, activo/inactivo) — no gestiona cajeros ni empleados de esa
+   piscina, eso es responsabilidad exclusiva del admin de la piscina.
+3. **El admin de una piscina puede dar acceso al sistema a un empleado** desde
+   Empleados, con un check "Dar acceso al sistema". Al marcarlo elige un rol
+   (**Cajero** o **Empleado**) y una contraseña; el email de acceso reutiliza
+   el campo de email de contacto que ya tenía el empleado (no hay un campo
+   separado). El acceso se puede otorgar al crear el empleado o después.
+4. **Gestión posterior del acceso de un empleado**: desde su ficha se puede
+   resetear la contraseña, cambiar el rol de acceso, y activar/desactivar el
+   login sin borrar al empleado.
+5. **Paridad `CAJERO`/`EMPLEADO`**: ambos roles tienen el mismo acceso
+   operativo (Control de Acceso, Alquiler, Tienda, Caja, Ventas) — la
+   diferencia entre los dos queda solo como etiqueta/cargo, no se construyó un
+   sistema de permisos por módulo (habría sido sobre-ingeniería para lo
+   pedido). Antes de este cambio `EMPLEADO` no tenía ningún acceso en el menú,
+   ni siquiera Dashboard.
+6. **Endurecimiento de seguridad en `/users`**: al revisar el controller para
+   construir esto se encontró que un `ADMIN` podía crear o editar usuarios con
+   rol `ADMIN`/`SUPERADMIN`, y tocar usuarios de **otra** piscina (sin
+   validación de tenant). Se corrigió: un `ADMIN` solo puede crear/editar
+   usuarios `CAJERO`/`EMPLEADO` de su propio tenant; `SUPERADMIN` sigue sin
+   restricciones.
+
+### Modelo de datos
+
+- `Employee`: + `userId?` (único) y relación opcional a `User` — un empleado
+  puede o no tener acceso al sistema.
+
+### Endpoints cambiados
+
+- `POST /tenants` (SUPERADMIN): ahora requiere también `adminName`,
+  `adminEmail`, `adminPassword` — crea el `Tenant` y su `User` ADMIN juntos.
+- `GET /tenants`: incluye el admin de cada piscina (`users` filtrado a
+  `role: ADMIN`).
+- `POST /users`, `PATCH /users/:id` (ADMIN/SUPERADMIN): un `ADMIN` ya no puede
+  asignar rol `ADMIN`/`SUPERADMIN` ni operar sobre usuarios de otro tenant.
+- `POST /employees`, `PATCH /employees/:id` (ADMIN/SUPERADMIN): admiten
+  `grantAccess`, `password`, `accessRole` (`CAJERO`/`EMPLEADO`) y, para editar,
+  `revokeAccess` — crean/editan el `User` vinculado al empleado.
+- `GET /employees`, `GET /employees/:id`: incluyen `user` (id, email, role,
+  isActive) si el empleado tiene acceso.
+
+### UI
+
+- Piscinas (`/tenants`): el formulario de creación pide también los datos del
+  admin; cada tarjeta muestra su admin con botón "Editar" (nombre, email,
+  contraseña opcional) y toggle activo/inactivo.
+- Empleados (`/empleados`): checkbox "Dar acceso al sistema" en el formulario
+  de creación (con selector de rol y contraseña); cada tarjeta con acceso
+  muestra su rol y estado, con botones "Resetear" y activar/desactivar; sin
+  acceso, muestra botón "Dar acceso al sistema".
+- Sidebar: `EMPLEADO` ahora ve los mismos módulos que `CAJERO`.

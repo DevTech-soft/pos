@@ -20,13 +20,13 @@ const NAV_ITEMS: {
   shortcut: string
   activeColor?: string
 }[] = [
-  { href: '/dashboard',     label: 'Dashboard',   icon: LayoutGrid,  roles: ['SUPERADMIN', 'ADMIN', 'CAJERO'], shortcut: 'Alt+1' },
-  { href: '/acceso',        label: 'Control Acceso', icon: UserCheck, roles: ['ADMIN', 'CAJERO'],              shortcut: 'Alt+2', activeColor: 'cyan' },
-  { href: '/alquiler',      label: 'Alquiler',     icon: CalendarClock, roles: ['ADMIN', 'CAJERO'],            shortcut: 'Alt+3', activeColor: 'violet' },
-  { href: '/tienda',        label: 'Tienda',       icon: ShoppingCart, roles: ['ADMIN', 'CAJERO'],             shortcut: 'Alt+4' },
+  { href: '/dashboard',     label: 'Dashboard',   icon: LayoutGrid,  roles: ['SUPERADMIN', 'ADMIN', 'CAJERO', 'EMPLEADO'], shortcut: 'Alt+1' },
+  { href: '/acceso',        label: 'Control Acceso', icon: UserCheck, roles: ['ADMIN', 'CAJERO', 'EMPLEADO'],              shortcut: 'Alt+2', activeColor: 'cyan' },
+  { href: '/alquiler',      label: 'Alquiler',     icon: CalendarClock, roles: ['ADMIN', 'CAJERO', 'EMPLEADO'],            shortcut: 'Alt+3', activeColor: 'violet' },
+  { href: '/tienda',        label: 'Tienda',       icon: ShoppingCart, roles: ['ADMIN', 'CAJERO', 'EMPLEADO'],             shortcut: 'Alt+4' },
   { href: '/inventario',    label: 'Inventario',   icon: Package,     roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+5', activeColor: 'emerald' },
-  { href: '/caja',          label: 'Caja',         icon: Landmark,    roles: ['ADMIN', 'CAJERO'],              shortcut: 'Alt+6' },
-  { href: '/ventas',        label: 'Ventas',       icon: ClipboardList, roles: ['ADMIN', 'CAJERO'],            shortcut: 'Alt+7' },
+  { href: '/caja',          label: 'Caja',         icon: Landmark,    roles: ['ADMIN', 'CAJERO', 'EMPLEADO'],              shortcut: 'Alt+6' },
+  { href: '/ventas',        label: 'Ventas',       icon: ClipboardList, roles: ['ADMIN', 'CAJERO', 'EMPLEADO'],            shortcut: 'Alt+7' },
   { href: '/metricas',      label: 'Métricas',     icon: BarChart3,   roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+8', activeColor: 'emerald' },
   { href: '/empleados',     label: 'Empleados',    icon: Users,       roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+9', activeColor: 'violet' },
   { href: '/nomina',        label: 'Nómina',       icon: DollarSign,  roles: ['ADMIN', 'SUPERADMIN'],          shortcut: 'Alt+0', activeColor: 'violet' },

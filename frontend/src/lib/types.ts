@@ -16,6 +16,8 @@ export interface Tenant {
   logoUrl?: string
   isActive: boolean
   createdAt: string
+  /** Admin(es) de la piscina — viene de GET /tenants (filtrado a role=ADMIN) y GET /tenants/:id (todos los roles) */
+  users?: { id: string; name: string; email: string; role?: Role; isActive: boolean }[]
 }
 
 export interface User {
@@ -227,6 +229,7 @@ export interface CashierSession {
 export interface Employee {
   id: string
   tenantId: string
+  userId?: string | null
   name: string
   role: string
   baseSalary: number
@@ -235,6 +238,8 @@ export interface Employee {
   notes?: string
   isActive: boolean
   hiredAt: string
+  /** Presente si el empleado tiene acceso al sistema (login) */
+  user?: { id: string; email: string; role: Role; isActive: boolean } | null
 }
 
 export interface PayrollEntry {
